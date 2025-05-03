@@ -1,0 +1,22 @@
+{
+  "name": "auto-carousel",
+  "version": "0.1.0",
+  "description": "Easy to use automatic carousel",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brabli/auto-carousel.git"
+  },
+  "keywords": [
+    "carousel"
+  ],
+  "author": "brabli",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brabli/auto-carousel/issues"
+  },
+  "homepage": "https://github.com/brabli/auto-carousel#readme"
+}

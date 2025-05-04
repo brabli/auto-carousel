@@ -13,45 +13,42 @@ export function createAutoCarousel(wrapper: HTMLElement, options: AutoCarouselOp
     const container = wrapper.querySelector('.container');
 
     if (!(container instanceof HTMLElement)) {
-        throw new Error("No container!");
+        throw new Error("No `.container` element found.");
     }
 
     container.style.display = 'flex';
-    const slides = container.querySelectorAll('.slide');
+    const children = container.children;
 
-    console.log("slides:");
-    console.log(slides);
-    slides.forEach((slide) => {
-        if (!(slide instanceof HTMLElement)) {
+    Array.from(children).forEach((child) => {
+        if (!(child instanceof HTMLElement)) {
             throw new Error;
         }
 
+        const slide = wrapInDiv(child);
         slide.style.minWidth = 'max-content';
-        slide.style.paddingLeft = `${options.gap}px`;
         slide.style.paddingRight = `${options.gap}px`;
-        console.log(slide.style.paddingLeft);
     });
 
 
-    const updateContainerSize = () => {
-        let i = 0;
+    const updateContainerSize = (container: HTMLElement) => {
+        let prevContainerWidth = 0;
+
         while (container.offsetWidth < window.innerWidth) {
-            console.log("Container offset width: " + container.offsetWidth);
-            console.log("Container client width: " + container.clientWidth);
-            console.log("Container children: " + container.children.length);
-            console.log("Window width: " + window.innerWidth);
             doubleContainerSize(container);
-            i++;
-            if (i > 8) {
-                console.warn(`Broke off loop early. Elmt no: ${container.children.length}`);
-                break;
+
+            const newContainerWidth = container.offsetWidth;
+
+            if (newContainerWidth <= prevContainerWidth) {
+                throw new Error("Something went wrong while increasing container size, the container either stayed the same width or it shrunk somehow.");
             }
+
+            prevContainerWidth = newContainerWidth;
         }
     };
 
-    window.addEventListener('resize', updateContainerSize);
+    window.addEventListener('resize', () => updateContainerSize(container));
 
-    updateContainerSize();
+    updateContainerSize(container);
 
 
     if ('right' === options.direction) {
@@ -178,5 +175,13 @@ function doubleContainerSize(element: Container): void {
         }
         element.appendChild(child.cloneNode(true));
     }
+}
+
+function wrapInDiv(elementToWrap: HTMLElement): HTMLElement {
+    const div = document.createElement('div');
+    elementToWrap.parentNode?.insertBefore(div, elementToWrap);
+    div.appendChild(elementToWrap);
+
+    return div;
 }
 

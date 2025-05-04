@@ -6,7 +6,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "watch": "tsup --watch"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,7 @@
     "@types/node": "^22.15.3",
     "eslint": "^9.26.0",
     "globals": "^16.0.0",
-    "tsup": "^8.4.0",
+    "tsup": "^8.3.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1"
   }

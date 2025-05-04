@@ -1,19 +1,33 @@
 {
     "compilerOptions": {
-        "types": ["node"],
+        "types": [
+            "node"
+        ],
         "declaration": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "isolatedModules": true,
-        "module": "CommonJS",
         "moduleResolution": "Node10",
         "noEmit": true,
         "noImplicitAny": true,
-        "outDir": "dist"
+        "outDir": "dist",
         "strict": true,
         "strictNullChecks": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
         "target": "ES2022",
+        "module": "NodeNext",
+        "sourceMap": true,
+        "lib": [
+            "es2022",
+            "dom",
+            "dom.iterable"
+        ]
     },
-    "include": ["src"],
-    "exclude": ["node_modules"]
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
 }

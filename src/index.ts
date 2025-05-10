@@ -22,6 +22,7 @@ export class AutoCarousel {
     }
 
     private initialise(element: HTMLElement, options: AutoCarouselOptions): void {
+        // set initial styles
         element.style.overflowX = "hidden";
         element.style.display = "flex";
 
@@ -49,6 +50,11 @@ export class AutoCarousel {
             }
 
             while (container.offsetWidth < window.innerWidth * 2) {
+                if (12 === numberOfTimesDoubled) {
+                    throw new Error(
+                        "Container has doubled in size 12 times and still hasn't reached the size it needs to be, aborting to avoid crashing.",
+                    );
+                }
                 doubleContainerSize(container);
                 numberOfTimesDoubled += 1;
 
@@ -58,7 +64,7 @@ export class AutoCarousel {
 
                 if (newContainerWidth <= prevContainerWidth) {
                     throw new Error(
-                        "Something went wrong while increasing container size, the container either stayed the same width or it shrunk somehow.",
+                        "[ERR] Something went wrong while doubline container elements; the container either stayed the same width or it shrunk somehow.",
                     );
                 }
 

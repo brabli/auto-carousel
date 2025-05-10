@@ -1,12 +1,13 @@
 type Container = HTMLElement;
 type Slide = HTMLElement;
 
-export type Direction = "left" | "right";
+type Direction = "left" | "right";
 
-export type AutoCarouselOptions = {
+type AutoCarouselOptions = {
     speed: number;
     gap: number;
     direction: Direction;
+    debug: boolean;
 };
 
 export class AutoCarousel {
@@ -20,10 +21,7 @@ export class AutoCarousel {
         this.initialise(this.element, this.options);
     }
 
-    private initialise(
-        element: HTMLElement,
-        options: AutoCarouselOptions,
-    ): void {
+    private initialise(element: HTMLElement, options: AutoCarouselOptions): void {
         element.style.overflowX = "hidden";
         element.style.display = "flex";
 
@@ -34,9 +32,27 @@ export class AutoCarousel {
 
         const updateContainerSize = (container: Container) => {
             let prevContainerWidth = 0;
+            let numberOfTimesDoubled = 0;
 
-            while (container.offsetWidth < window.innerWidth) {
+            if (container.offsetWidth < window.innerWidth * 2) {
+                this.debug(`
+                    About to begin doubling container size.
+                    Window inner width: ${window.innerWidth}
+                    Container offset width: ${container.offsetWidth}
+                `);
+            } else {
+                this.debug(`
+                    No need to double container size, it's wide enough.
+                    Window inner width: ${window.innerWidth}
+                    Container offset width: ${container.offsetWidth}
+                `);
+            }
+
+            while (container.offsetWidth < window.innerWidth * 2) {
                 doubleContainerSize(container);
+                numberOfTimesDoubled += 1;
+
+                this.debug(`Doubled container ${numberOfTimesDoubled} time/s.`);
 
                 const newContainerWidth = container.offsetWidth;
 
@@ -63,10 +79,7 @@ export class AutoCarousel {
         let scrollPosition = 0;
         let lastTimestamp: number | undefined;
 
-        function animateCarousel(
-            timestamp: number,
-            options: AutoCarouselOptions,
-        ) {
+        function animateCarousel(timestamp: number, options: AutoCarouselOptions) {
             const delta = calculateDelta(timestamp, lastTimestamp);
 
             if (!(container instanceof HTMLElement)) {
@@ -78,7 +91,7 @@ export class AutoCarousel {
             const speed = calculateSpeed(options.speed, delta);
             scrollPosition += speed;
 
-            let childWidth;
+            let childWidth = undefined;
 
             if ("left" === options.direction) {
                 const firstChild = getFirstChild(container);
@@ -132,48 +145,40 @@ export class AutoCarousel {
                 container.style.transform = `translateX(${scrollPosition}px)`;
             }
 
-            requestAnimationFrame((timestamp: number) =>
-                animateCarousel(timestamp, options),
-            );
+            requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, options));
         }
 
-        requestAnimationFrame((timestamp: number) =>
-            animateCarousel(timestamp, options),
-        );
+        requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, options));
+    }
+
+    private debug(message: string): void {
+        if (this.options.debug) {
+            const sanitisedMessage = message.replace(/\n\s+/g, "\n").trim();
+            console.info(sanitisedMessage);
+        }
     }
 }
 
 function getContainer(element: HTMLElement): Container {
     const container = element.querySelector(".container");
-    assert(
-        container instanceof HTMLElement,
-        "[ERR] Could not find a container element.",
-    );
+    assert(container instanceof HTMLElement, "[ERR] Could not find a container element.");
 
     return container;
 }
 
-function turnChildrenIntoSlides(
-    container: Container,
-    opts: AutoCarouselOptions,
-): void {
+function turnChildrenIntoSlides(container: Container, opts: AutoCarouselOptions): void {
     const children = container.children;
 
-    Array.from(children).forEach((child) => {
-        // assert(child instanceof HTMLElement, "A direct child of the container element was not an HTMLElement as expected.");
-
+    for (const child of children) {
         createSlide(child, opts);
-    });
+    }
 }
 
 function calculateSpeed(speed: number, delta: number): number {
     return speed * 0.05 * delta;
 }
 
-function calculateDelta(
-    timestamp: number,
-    lastTimestamp: number | undefined,
-): number {
+function calculateDelta(timestamp: number, lastTimestamp: number | undefined): number {
     return timestamp - (lastTimestamp ?? timestamp);
 }
 
@@ -192,9 +197,7 @@ function getLastChild(element: Container): HTMLElement {
     const lastChild = element.children[index];
 
     if (!lastChild) {
-        throw new Error(
-            `Infinite scroll container has no child at index ${index}!`,
-        );
+        throw new Error(`Infinite scroll container has no child at index ${index}!`);
     }
 
     return lastChild as HTMLElement;

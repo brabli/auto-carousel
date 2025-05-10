@@ -1,6 +1,32 @@
-.container div div {
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+h1 {
     padding: 1rem;
+    font-family: sans-serif;
+}
+
+.text-boxes .slide {
+    font-family: sans-serif;
+    padding: 1rem 1.5rem;
     border: 1px solid black;
     border-radius: 1rem;
     background-color: red;
+    color: white;
+}
+
+.text-boxes .red {
+    background-color: red;
+}
+
+.text-boxes .green {
+    background-color: green;
+    width: 8rem;
+}
+
+.text-boxes .blue {
+    background-color: blue;
 }

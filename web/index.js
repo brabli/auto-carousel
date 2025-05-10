@@ -1,12 +1,16 @@
 import { AutoCarousel } from "../dist/index.mjs";
 
-const wrapper = document.querySelector(".wrapper");
+const textBoxes = document.querySelector(".text-boxes");
 
-if (null === wrapper) {
-    throw new Error("No .wrapper class was found.");
-}
+new AutoCarousel(textBoxes, {
+    speed: 1,
+    gap: 32,
+    direction: "left",
+});
 
-new AutoCarousel(wrapper, {
+const images = document.querySelector(".images");
+
+new AutoCarousel(images, {
     speed: 1,
     gap: 32,
     direction: "left",

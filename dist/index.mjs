@@ -15,11 +15,29 @@ var AutoCarousel = class {
     turnChildrenIntoSlides(container, this.options);
     const updateContainerSize = (container2) => {
       let prevContainerWidth = 0;
-      while (container2.offsetWidth < window.innerWidth) {
+      let numberOfTimesDoubled = 0;
+      if (container2.offsetWidth < window.innerWidth * 2) {
+        this.debug(`
+                    About to begin doubling container size.
+                    Window inner width: ${window.innerWidth}
+                    Container offset width: ${container2.offsetWidth}
+                `);
+      } else {
+        this.debug(`
+                    No need to double container size, it's wide enough.
+                    Window inner width: ${window.innerWidth}
+                    Container offset width: ${container2.offsetWidth}
+                `);
+      }
+      while (container2.offsetWidth < window.innerWidth * 2) {
         doubleContainerSize(container2);
+        numberOfTimesDoubled += 1;
+        this.debug(`Doubled container ${numberOfTimesDoubled} time/s.`);
         const newContainerWidth = container2.offsetWidth;
         if (newContainerWidth <= prevContainerWidth) {
-          throw new Error("Something went wrong while increasing container size, the container either stayed the same width or it shrunk somehow.");
+          throw new Error(
+            "Something went wrong while increasing container size, the container either stayed the same width or it shrunk somehow."
+          );
         }
         prevContainerWidth = newContainerWidth;
       }
@@ -40,7 +58,7 @@ var AutoCarousel = class {
       lastTimestamp = timestamp;
       const speed = calculateSpeed(options2.speed, delta);
       scrollPosition += speed;
-      let childWidth;
+      let childWidth = void 0;
       if ("left" === options2.direction) {
         const firstChild = getFirstChild(container);
         childWidth = firstChild.offsetWidth;
@@ -87,6 +105,12 @@ var AutoCarousel = class {
     }
     requestAnimationFrame((timestamp) => animateCarousel(timestamp, options));
   }
+  debug(message) {
+    if (this.options.debug) {
+      const sanitisedMessage = message.replace(/\n\s+/g, "\n").trim();
+      console.info(sanitisedMessage);
+    }
+  }
 };
 function getContainer(element) {
   const container = element.querySelector(".container");
@@ -95,9 +119,9 @@ function getContainer(element) {
 }
 function turnChildrenIntoSlides(container, opts) {
   const children = container.children;
-  Array.from(children).forEach((child) => {
+  for (const child of children) {
     createSlide(child, opts);
-  });
+  }
 }
 function calculateSpeed(speed, delta) {
   return speed * 0.05 * delta;
@@ -124,7 +148,10 @@ function doubleContainerSize(container) {
   const numChildren = container.children.length;
   for (let i = 0; i < numChildren; i++) {
     const child = container.children[i];
-    assert(void 0 !== child, `A child element within the container was undefined at index ${i}.`);
+    assert(
+      void 0 !== child,
+      `A child element within the container was undefined at index ${i}.`
+    );
     container.appendChild(child.cloneNode(true));
   }
 }

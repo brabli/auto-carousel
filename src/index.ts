@@ -1,13 +1,13 @@
 type Container = HTMLElement;
 type Slide = HTMLElement;
 
-export type Direction = 'left' | 'right';
+export type Direction = "left" | "right";
 
 export type AutoCarouselOptions = {
-    speed: number,
-    gap: number,
-    direction: Direction,
-}
+    speed: number;
+    gap: number;
+    direction: Direction;
+};
 
 export class AutoCarousel {
     private element: HTMLElement;
@@ -20,12 +20,15 @@ export class AutoCarousel {
         this.initialise(this.element, this.options);
     }
 
-    private initialise(element: HTMLElement, options: AutoCarouselOptions): void {
-        element.style.overflowX = 'hidden';
-        element.style.display = 'flex';
+    private initialise(
+        element: HTMLElement,
+        options: AutoCarouselOptions,
+    ): void {
+        element.style.overflowX = "hidden";
+        element.style.display = "flex";
 
         const container = getContainer(this.element);
-        container.style.display = 'flex';
+        container.style.display = "flex";
 
         turnChildrenIntoSlides(container, this.options);
 
@@ -38,19 +41,21 @@ export class AutoCarousel {
                 const newContainerWidth = container.offsetWidth;
 
                 if (newContainerWidth <= prevContainerWidth) {
-                    throw new Error("Something went wrong while increasing container size, the container either stayed the same width or it shrunk somehow.");
+                    throw new Error(
+                        "Something went wrong while increasing container size, the container either stayed the same width or it shrunk somehow.",
+                    );
                 }
 
                 prevContainerWidth = newContainerWidth;
             }
         };
 
-        window.addEventListener('resize', () => updateContainerSize(container));
+        window.addEventListener("resize", () => updateContainerSize(container));
 
         updateContainerSize(container);
 
         // Move container left a bit to hide elements appearing on the left
-        if ('right' === this.options.direction) {
+        if ("right" === this.options.direction) {
             const quarterWidth = container.offsetWidth / 4;
             container.style.marginLeft = `-${quarterWidth}px`;
         }
@@ -58,7 +63,10 @@ export class AutoCarousel {
         let scrollPosition = 0;
         let lastTimestamp: number | undefined;
 
-        function animateCarousel(timestamp: number, options: AutoCarouselOptions) {
+        function animateCarousel(
+            timestamp: number,
+            options: AutoCarouselOptions,
+        ) {
             const delta = calculateDelta(timestamp, lastTimestamp);
 
             if (!(container instanceof HTMLElement)) {
@@ -67,30 +75,29 @@ export class AutoCarousel {
 
             lastTimestamp = timestamp;
 
-
             const speed = calculateSpeed(options.speed, delta);
             scrollPosition += speed;
 
             let childWidth;
 
-            if ('left' === options.direction) {
+            if ("left" === options.direction) {
                 const firstChild = getFirstChild(container);
                 childWidth = firstChild.offsetWidth;
             }
 
-            if ('right' === options.direction) {
+            if ("right" === options.direction) {
                 const lastChild = getLastChild(container);
                 childWidth = lastChild.offsetWidth;
             }
 
             if (undefined === childWidth) {
-                throw new Error('Child element width is undefined.');
+                throw new Error("Child element width is undefined.");
             }
 
             if (scrollPosition >= childWidth) {
                 scrollPosition = 0;
 
-                if ('left' === options.direction) {
+                if ("left" === options.direction) {
                     const index = 0;
 
                     const child = container.children[index];
@@ -101,7 +108,7 @@ export class AutoCarousel {
                     container.removeChild(child);
                 }
 
-                if ('right' === options.direction) {
+                if ("right" === options.direction) {
                     const index = container.children.length - 1;
                     const lastChild = container.children[index];
                     if (undefined === lastChild) {
@@ -117,29 +124,39 @@ export class AutoCarousel {
                 }
             }
 
-            if ('left' === options.direction) {
+            if ("left" === options.direction) {
                 container.style.transform = `translateX(-${scrollPosition}px)`;
             }
 
-            if ('right' === options.direction) {
+            if ("right" === options.direction) {
                 container.style.transform = `translateX(${scrollPosition}px)`;
             }
 
-            requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, options));
+            requestAnimationFrame((timestamp: number) =>
+                animateCarousel(timestamp, options),
+            );
         }
 
-        requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, options));
+        requestAnimationFrame((timestamp: number) =>
+            animateCarousel(timestamp, options),
+        );
     }
 }
 
 function getContainer(element: HTMLElement): Container {
     const container = element.querySelector(".container");
-    assert(container instanceof HTMLElement, "[ERR] Could not find a container element.");
+    assert(
+        container instanceof HTMLElement,
+        "[ERR] Could not find a container element.",
+    );
 
     return container;
 }
 
-function turnChildrenIntoSlides(container: Container, opts: AutoCarouselOptions): void {
+function turnChildrenIntoSlides(
+    container: Container,
+    opts: AutoCarouselOptions,
+): void {
     const children = container.children;
 
     Array.from(children).forEach((child) => {
@@ -147,14 +164,16 @@ function turnChildrenIntoSlides(container: Container, opts: AutoCarouselOptions)
 
         createSlide(child, opts);
     });
-
 }
 
 function calculateSpeed(speed: number, delta: number): number {
     return speed * 0.05 * delta;
 }
 
-function calculateDelta(timestamp: number, lastTimestamp: number | undefined): number {
+function calculateDelta(
+    timestamp: number,
+    lastTimestamp: number | undefined,
+): number {
     return timestamp - (lastTimestamp ?? timestamp);
 }
 
@@ -162,7 +181,7 @@ function getFirstChild(element: Container): HTMLElement {
     const firstChild = element.children[0];
 
     if (!firstChild) {
-        throw new Error('Infinite scroll container has no child at index 0!');
+        throw new Error("Infinite scroll container has no child at index 0!");
     }
 
     return firstChild as HTMLElement;
@@ -173,7 +192,9 @@ function getLastChild(element: Container): HTMLElement {
     const lastChild = element.children[index];
 
     if (!lastChild) {
-        throw new Error(`Infinite scroll container has no child at index ${index}!`);
+        throw new Error(
+            `Infinite scroll container has no child at index ${index}!`,
+        );
     }
 
     return lastChild as HTMLElement;
@@ -184,13 +205,16 @@ function doubleContainerSize(container: Container): void {
 
     for (let i = 0; i < numChildren; i++) {
         const child = container.children[i];
-        assert(undefined !== child, `A child element within the container was undefined at index ${i}.`);
+        assert(
+            undefined !== child,
+            `A child element within the container was undefined at index ${i}.`,
+        );
         container.appendChild(child.cloneNode(true));
     }
 }
 
 function wrapInDiv(elementToWrap: Element): Slide {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     elementToWrap.parentNode?.insertBefore(div, elementToWrap);
     div.appendChild(elementToWrap);
 
@@ -199,7 +223,7 @@ function wrapInDiv(elementToWrap: Element): Slide {
 
 function createSlide(element: Element, options: AutoCarouselOptions): Slide {
     const slide = wrapInDiv(element);
-    slide.style.minWidth = 'max-content';
+    slide.style.minWidth = "max-content";
     slide.style.paddingRight = `${options.gap}px`;
 
     return slide;
@@ -210,5 +234,3 @@ function assert(statement: boolean, errorMessage: string): asserts statement {
         throw new Error(`[ERR] ${errorMessage}`);
     }
 }
-
-

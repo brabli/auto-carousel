@@ -2,7 +2,7 @@ type Container = HTMLElement;
 type Slide = HTMLElement;
 type Direction = "left" | "right";
 
-type AutoCarouselOptions = {
+export type AutoCarouselOptions = {
     speed: number;
     gap: number;
     direction: Direction;
@@ -11,7 +11,7 @@ type AutoCarouselOptions = {
 };
 
 export class AutoCarousel {
-    /** Initial element. */
+    /** Initial wrapper element. */
     public element: HTMLElement;
     /** Options this instance of AutoCarousel is using. */
     public options: AutoCarouselOptions;

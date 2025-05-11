@@ -1,3 +1,5 @@
+import { debug } from "console";
+
 type Container = HTMLElement;
 type Slide = HTMLElement;
 type Direction = "left" | "right";
@@ -36,33 +38,31 @@ export class AutoCarousel {
         this.container.style.display = "flex";
 
         const updateContainerSize = (container: Container) => {
-            let prevContainerWidth = 0;
-            let numberOfTimesDoubled = 0;
+            const originalContainerWidth = container.offsetWidth;
+            const requiredMinimumWidth = window.innerWidth * 2;
+            const numberOfTimesToDouble = Math.ceil(
+                Math.max(0, Math.log2(requiredMinimumWidth / originalContainerWidth)),
+            );
 
-            if (container.offsetWidth < window.innerWidth * 2) {
-                this.debug(`
-                    About to begin doubling container size.
-                    Window inner width: ${window.innerWidth}
-                    Container offset width: ${container.offsetWidth}
-                `);
+            this.debug(
+                `Need to double ${numberOfTimesToDouble} time${s(numberOfTimesToDouble)} to reach required container width.`,
+            );
+
+            if (numberOfTimesToDouble > 0) {
+                this.debug("About to begin doubling container size.");
             } else {
-                this.debug(`
-                    No need to double container size, it's wide enough.
-                    Window inner width: ${window.innerWidth}
-                    Container offset width: ${container.offsetWidth}
-                `);
+                this.debug(`No need to double container size, it's wide enough.`);
             }
 
-            while (container.offsetWidth < window.innerWidth * 2) {
-                // If the container has to double in length more than 12 times, something is wrong
-                if (12 === numberOfTimesDoubled) {
-                    throw new Error(
-                        "Container has doubled in size 12 times and still hasn't reached the size it needs to be, aborting to avoid crashing.",
-                    );
-                }
+            this.debug(`
+                Window inner width: ${window.innerWidth}
+                Container offset width: ${container.offsetWidth}
+            `);
 
+            let prevContainerWidth = 0;
+
+            for (let i = 0; i < numberOfTimesToDouble; i++) {
                 doubleContainerSize(container);
-                numberOfTimesDoubled += 1;
 
                 const newContainerWidth = container.offsetWidth;
 
@@ -74,11 +74,6 @@ export class AutoCarousel {
 
                 prevContainerWidth = newContainerWidth;
             }
-
-            this.debug(`
-                Doubled container ${numberOfTimesDoubled} time${s(numberOfTimesDoubled)}.
-                It started with ${this.slides.length} slide${s(this.slides.length)} which has been doubled up to ${this}
-            `);
         };
 
         updateContainerSize(this.container);

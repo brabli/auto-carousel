@@ -1,5 +1,3 @@
-import { debug } from "console";
-
 type Container = HTMLElement;
 type Slide = HTMLElement;
 type Direction = "left" | "right";

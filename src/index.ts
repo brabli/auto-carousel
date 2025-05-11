@@ -17,11 +17,14 @@ export class AutoCarousel {
     public options: AutoCarouselOptions;
     /** The element that holds the slides. */
     public container: Container;
+    /** Original slide elements before any doubling occurs. */
+    public slides: Slide[];
 
     constructor(element: HTMLElement, options: AutoCarouselOptions) {
         this.element = element;
         this.options = options;
         this.container = getContainer(this);
+        this.slides = turnChildrenIntoSlides(this);
 
         this.initialise();
     }
@@ -31,8 +34,6 @@ export class AutoCarousel {
         this.element.style.overflowX = "hidden";
         this.element.style.display = "flex";
         this.container.style.display = "flex";
-
-        turnChildrenIntoSlides(this);
 
         const updateContainerSize = (container: Container) => {
             let prevContainerWidth = 0;
@@ -63,8 +64,6 @@ export class AutoCarousel {
                 doubleContainerSize(container);
                 numberOfTimesDoubled += 1;
 
-                this.debug(`Doubled container ${numberOfTimesDoubled} time/s.`);
-
                 const newContainerWidth = container.offsetWidth;
 
                 if (newContainerWidth <= prevContainerWidth) {
@@ -75,6 +74,11 @@ export class AutoCarousel {
 
                 prevContainerWidth = newContainerWidth;
             }
+
+            this.debug(`
+                Doubled container ${numberOfTimesDoubled} time${s(numberOfTimesDoubled)}.
+                It started with ${this.slides.length} slide${s(this.slides.length)} which has been doubled up to ${this}
+            `);
         };
 
         updateContainerSize(this.container);
@@ -83,7 +87,7 @@ export class AutoCarousel {
 
         // Move container left a bit to hide elements appearing on the left
         if ("right" === this.options.direction) {
-            const quarterWidth = this.container.offsetWidth / 4;
+            const quarterWidth = this.container.offsetWidth / 2;
             this.container.style.marginLeft = `-${quarterWidth}px`;
         }
 
@@ -154,12 +158,15 @@ function getContainer(autoCarousel: AutoCarousel): Container {
     return container;
 }
 
-function turnChildrenIntoSlides(autoCarousel: AutoCarousel): void {
+function turnChildrenIntoSlides(autoCarousel: AutoCarousel): Slide[] {
     const children = autoCarousel.container.children;
+    const slides = [];
 
     for (const child of children) {
-        createSlide(child, autoCarousel.options);
+        slides.push(createSlide(child, autoCarousel.options));
     }
+
+    return slides;
 }
 
 function calculateSpeed(speed: number, delta: number): number {
@@ -168,27 +175,6 @@ function calculateSpeed(speed: number, delta: number): number {
 
 function calculateDelta(timestamp: number, lastTimestamp: number | undefined): number {
     return timestamp - (lastTimestamp ?? timestamp);
-}
-
-function getFirstSlide(element: Container): Slide {
-    const firstSlide = element.children[0];
-
-    if (!(firstSlide instanceof HTMLElement)) {
-        throw new Error("Container has no slide at index 0.");
-    }
-
-    return firstSlide;
-}
-
-function getLastSlide(element: Container): Slide {
-    const index = element.children.length - 1;
-    const lastSlide = element.children[index];
-
-    if (!(lastSlide instanceof HTMLElement)) {
-        throw new Error(`Container has no child at index ${index}.`);
-    }
-
-    return lastSlide;
 }
 
 function doubleContainerSize(container: Container): void {
@@ -246,4 +232,8 @@ function getSlideToRemove(autoCarousel: AutoCarousel): Slide {
     }
 
     return slideToRemove as Slide;
+}
+
+function s(n: number): string {
+    return n === 1 ? "" : "s";
 }

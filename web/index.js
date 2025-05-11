@@ -6,7 +6,7 @@ new AutoCarousel(textBoxes, {
     speed: 2,
     gap: 32,
     direction: "right",
-    debug: false,
+    debug: true,
     containerSelector: ".container",
 });
 
@@ -25,6 +25,5 @@ new AutoCarousel(small, {
     speed: 1,
     gap: 8,
     direction: "right",
-    debug: true,
     containerSelector: ".container",
 });

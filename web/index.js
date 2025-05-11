@@ -4,8 +4,8 @@ const textBoxes = document.querySelector(".text-boxes");
 
 new AutoCarousel(textBoxes, {
     speed: 2,
-    gap: 2,
-    direction: "left",
+    gap: 32,
+    direction: "right",
     debug: false,
     containerSelector: ".container",
 });
@@ -15,7 +15,7 @@ const images = document.querySelector(".images");
 new AutoCarousel(images, {
     speed: 1,
     gap: 32,
-    direction: "left",
+    direction: "right",
     containerSelector: ".container",
 });
 

@@ -66,7 +66,7 @@ export class AutoCarousel {
 
                 if (newContainerWidth <= prevContainerWidth) {
                     throw new Error(
-                        "[ERR] Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.",
+                        "Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.",
                     );
                 }
 

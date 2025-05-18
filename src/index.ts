@@ -154,12 +154,14 @@ export class AutoCarousel {
                 autoCarousel.container.removeChild(slideToRemove);
             }
 
+            // Apparently using translate3d instead of translateX makes the browser "more likely" to use the GPU,
+            // don't quote me on that though...
             if ("left" === autoCarousel.options.direction) {
-                autoCarousel.container.style.transform = `translateX(-${scrollPosition}px)`;
+                autoCarousel.container.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
             }
 
             if ("right" === autoCarousel.options.direction) {
-                autoCarousel.container.style.transform = `translateX(${scrollPosition}px)`;
+                autoCarousel.container.style.transform = `translate3d(${scrollPosition}px, 0, 0)`;
             }
 
             requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, autoCarousel));

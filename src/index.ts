@@ -5,6 +5,7 @@ interface AutoCarouselOptions {
     direction: "left" | "right";
     gap: number;
     speed: number;
+    stopOnHover: boolean;
 }
 
 const defaultOptions: AutoCarouselOptions = {
@@ -12,6 +13,7 @@ const defaultOptions: AutoCarouselOptions = {
     direction: "left",
     gap: 32,
     speed: 1,
+    stopOnHover: false,
 };
 
 type Container = HTMLElement;
@@ -27,11 +29,14 @@ export class AutoCarousel {
     /** Original slide elements before any doubling occurs. */
     public slides: Slide[];
 
+    private hover: boolean;
+
     constructor(element: HTMLElement, options: AutoCarouselUserOptions = {}) {
         this.element = element;
         this.options = mergeWithDefaultOptions(options);
         this.container = createContainer(this);
         this.slides = createSlides(this);
+        this.hover = false;
 
         this.initialise();
     }
@@ -93,7 +98,28 @@ export class AutoCarousel {
         let scrollPosition = 0;
         let lastTimestamp: number | undefined;
 
+        if (this.options.stopOnHover) {
+            this.container.addEventListener("mouseover", () => {
+                this.hover = true;
+            });
+
+            this.container.addEventListener("mouseout", () => {
+                this.hover = false;
+            });
+        }
+
         function animateCarousel(timestamp: number, autoCarousel: AutoCarousel): void {
+            if (autoCarousel.hover) {
+                lastTimestamp = undefined; // Animation jumps on mouseout if timestamp is not reset
+
+                setTimeout(() => {
+                    requestAnimationFrame((timestamp: number) =>
+                        animateCarousel(timestamp, autoCarousel),
+                    );
+                }, 100); // Check every 100ms whether to resume or not
+                return;
+            }
+
             const delta = calculateDelta(timestamp, lastTimestamp);
 
             lastTimestamp = timestamp;
@@ -138,6 +164,9 @@ export class AutoCarousel {
         requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, this));
     }
 
+    /**
+     * Print a message to the console if the `debug` option is enabled.
+     */
     private debug(message: string): void {
         if (this.options.debug) {
             const sanitisedMessage = message.replace(/\n\s+/g, "\n").trim();
@@ -147,7 +176,7 @@ export class AutoCarousel {
 }
 
 function mergeWithDefaultOptions(userOptions: AutoCarouselUserOptions): AutoCarouselOptions {
-    const mergedOptions = { ...userOptions, ...defaultOptions };
+    const mergedOptions = { ...defaultOptions, ...userOptions };
 
     return mergedOptions;
 }

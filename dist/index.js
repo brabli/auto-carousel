@@ -24,6 +24,7 @@ __export(src_exports, {
 });
 module.exports = __toCommonJS(src_exports);
 var defaultOptions = {
+  align: "middle",
   debug: false,
   direction: "left",
   gap: 32,
@@ -35,7 +36,7 @@ var AutoCarousel = class {
   element;
   /** Options this instance of AutoCarousel is using. */
   options;
-  /** The element that hoAutoCarouselOptionslds the slides. */
+  /** The created element that holds the slides. */
   container;
   /** Original slide elements before any doubling occurs. */
   slides;
@@ -159,6 +160,17 @@ function createContainer(autoCarousel) {
   }
   element.appendChild(container);
   container.style.display = "flex";
+  switch (autoCarousel.options.align) {
+    case "top":
+      container.style.alignItems = "flex-start";
+      break;
+    case "middle":
+      container.style.alignItems = "center";
+      break;
+    case "bottom":
+      container.style.alignItems = "flex-end";
+      break;
+  }
   return container;
 }
 function createSlides(autoCarousel) {

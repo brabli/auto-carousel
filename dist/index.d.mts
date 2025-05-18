@@ -1,5 +1,6 @@
 type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
 interface AutoCarouselOptions {
+    align: "top" | "middle" | "bottom";
     debug: boolean;
     direction: "left" | "right";
     gap: number;
@@ -13,7 +14,7 @@ declare class AutoCarousel {
     element: HTMLElement;
     /** Options this instance of AutoCarousel is using. */
     options: AutoCarouselOptions;
-    /** The element that hoAutoCarouselOptionslds the slides. */
+    /** The created element that holds the slides. */
     container: Container;
     /** Original slide elements before any doubling occurs. */
     slides: Slide[];

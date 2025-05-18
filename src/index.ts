@@ -97,9 +97,6 @@ export class AutoCarousel {
             this.container.style.marginLeft = `-${quarterWidth}px`;
         }
 
-        let scrollPosition = 0;
-        let lastTimestamp: number | undefined;
-
         if (this.options.stopOnHover) {
             this.container.addEventListener("mouseover", () => {
                 this.hover = true;
@@ -111,6 +108,11 @@ export class AutoCarousel {
                 this.container.style.willChange = "transform";
             });
         }
+
+        let scrollPosition = 0;
+        let lastTimestamp: number | undefined;
+        let slideToRemove = getSlideToRemove(this);
+        let childWidth = slideToRemove.offsetWidth;
 
         function animateCarousel(timestamp: number, autoCarousel: AutoCarousel): void {
             if (autoCarousel.hover) {
@@ -131,9 +133,6 @@ export class AutoCarousel {
             const speed = calculateSpeed(autoCarousel.options.speed, delta);
             scrollPosition += speed;
 
-            const slideToRemove = getSlideToRemove(autoCarousel);
-            const childWidth = slideToRemove.offsetWidth;
-
             if (scrollPosition >= childWidth) {
                 scrollPosition = 0;
 
@@ -148,6 +147,9 @@ export class AutoCarousel {
                 }
 
                 autoCarousel.container.removeChild(slideToRemove);
+
+                slideToRemove = getSlideToRemove(autoCarousel);
+                childWidth = slideToRemove.offsetWidth;
             }
 
             // Apparently using translate3d instead of translateX makes the browser "more likely" to use the GPU,

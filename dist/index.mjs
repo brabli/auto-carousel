@@ -1,16 +1,22 @@
 // src/index.ts
+var defaultOptions = {
+  debug: false,
+  direction: "left",
+  gap: 32,
+  speed: 1
+};
 var AutoCarousel = class {
   /** Initial wrapper element. */
   element;
   /** Options this instance of AutoCarousel is using. */
   options;
-  /** The element that holds the slides. */
+  /** The element that hoAutoCarouselOptionslds the slides. */
   container;
   /** Original slide elements before any doubling occurs. */
   slides;
-  constructor(element, options) {
+  constructor(element, options = {}) {
     this.element = element;
-    this.options = options;
+    this.options = mergeWithDefaultOptions(options);
     this.container = createContainer(this);
     this.slides = createSlides(this);
     this.initialise();
@@ -94,6 +100,10 @@ var AutoCarousel = class {
     }
   }
 };
+function mergeWithDefaultOptions(userOptions) {
+  const mergedOptions = { ...userOptions, ...defaultOptions };
+  return mergedOptions;
+}
 function createContainer(autoCarousel) {
   const element = autoCarousel.element;
   const container = document.createElement("div");

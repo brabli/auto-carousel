@@ -7,7 +7,6 @@ export type AutoCarouselOptions = {
     gap: number;
     direction: Direction;
     debug: boolean;
-    containerSelector: string;
 };
 
 export class AutoCarousel {
@@ -23,8 +22,8 @@ export class AutoCarousel {
     constructor(element: HTMLElement, options: AutoCarouselOptions) {
         this.element = element;
         this.options = options;
-        this.container = getContainer(this);
-        this.slides = turnChildrenIntoSlides(this);
+        this.container = createContainer(this);
+        this.slides = createSlides(this);
 
         this.initialise();
     }
@@ -33,7 +32,6 @@ export class AutoCarousel {
         // Set initial required styles
         this.element.style.overflowX = "hidden";
         this.element.style.display = "flex";
-        this.container.style.display = "flex";
 
         const updateContainerSize = (container: Container) => {
             const originalContainerWidth = container.offsetWidth;
@@ -140,18 +138,21 @@ export class AutoCarousel {
     }
 }
 
-function getContainer(autoCarousel: AutoCarousel): Container {
-    const selector = autoCarousel.options.containerSelector;
-    const container = autoCarousel.element.querySelector(selector);
+function createContainer(autoCarousel: AutoCarousel): Container {
+    const element = autoCarousel.element;
+    const container = document.createElement("div");
 
-    if (!(container instanceof HTMLElement)) {
-        throw new Error(`No container element found with the selector "${selector}".`);
+    while (element.firstChild) {
+        container.appendChild(element.firstChild);
     }
+
+    element.appendChild(container);
+    container.style.display = "flex";
 
     return container;
 }
 
-function turnChildrenIntoSlides(autoCarousel: AutoCarousel): Slide[] {
+function createSlides(autoCarousel: AutoCarousel): Slide[] {
     const children = autoCarousel.container.children;
     const slides = [];
 
@@ -184,7 +185,7 @@ function doubleContainerSize(container: Container): void {
     }
 }
 
-function wrapInDiv(elementToWrap: Element): Slide {
+function wrapInDiv(elementToWrap: Element): HTMLDivElement {
     const div = document.createElement("div");
     elementToWrap.parentNode?.insertBefore(div, elementToWrap);
     div.appendChild(elementToWrap);

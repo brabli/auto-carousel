@@ -1,3 +1,6 @@
+/**
+ * User specified options for AutoCarousel.
+ */
 export type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
 
 interface AutoCarouselOptions {
@@ -21,15 +24,16 @@ const defaultOptions: AutoCarouselOptions = {
 type Container = HTMLElement;
 type Slide = HTMLElement;
 
+/**
+ * Create an automatic carousel from an element and it's children.
+ */
 export class AutoCarousel {
-    /** Initial wrapper element. */
+    /** Initial element. */
     public element: HTMLElement;
     /** Options this instance of AutoCarousel is using. */
     public options: AutoCarouselOptions;
-    /** The created element that holds the slides. */
+    /** The created container element that holds the slides. */
     public container: Container;
-    /** Original slide elements before any doubling occurs. */
-    public slides: Slide[];
 
     private hover: boolean;
 
@@ -37,7 +41,8 @@ export class AutoCarousel {
         this.element = element;
         this.options = mergeWithDefaultOptions(options);
         this.container = createContainer(this);
-        this.slides = createSlides(this);
+
+        createSlides(this);
         this.hover = false;
 
         this.initialise();

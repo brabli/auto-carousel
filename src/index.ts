@@ -103,10 +103,12 @@ export class AutoCarousel {
         if (this.options.stopOnHover) {
             this.container.addEventListener("mouseover", () => {
                 this.hover = true;
+                this.container.style.willChange = "auto";
             });
 
             this.container.addEventListener("mouseout", () => {
                 this.hover = false;
+                this.container.style.willChange = "transform";
             });
         }
 
@@ -193,6 +195,7 @@ function createContainer(autoCarousel: AutoCarousel): Container {
 
     element.appendChild(container);
     container.style.display = "flex";
+    container.style.willChange = "transform"; // Optimisation
 
     switch (autoCarousel.options.align) {
         case "top":

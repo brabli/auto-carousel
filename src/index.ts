@@ -1,27 +1,35 @@
+export type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
+
+interface AutoCarouselOptions {
+    debug: boolean;
+    direction: "left" | "right";
+    gap: number;
+    speed: number;
+}
+
+const defaultOptions: AutoCarouselOptions = {
+    debug: false,
+    direction: "left",
+    gap: 32,
+    speed: 1,
+};
+
 type Container = HTMLElement;
 type Slide = HTMLElement;
-type Direction = "left" | "right";
-
-export type AutoCarouselOptions = {
-    speed: number;
-    gap: number;
-    direction: Direction;
-    debug: boolean;
-};
 
 export class AutoCarousel {
     /** Initial wrapper element. */
     public element: HTMLElement;
     /** Options this instance of AutoCarousel is using. */
     public options: AutoCarouselOptions;
-    /** The element that holds the slides. */
+    /** The element that hoAutoCarouselOptionslds the slides. */
     public container: Container;
     /** Original slide elements before any doubling occurs. */
     public slides: Slide[];
 
-    constructor(element: HTMLElement, options: AutoCarouselOptions) {
+    constructor(element: HTMLElement, options: AutoCarouselUserOptions = {}) {
         this.element = element;
-        this.options = options;
+        this.options = mergeWithDefaultOptions(options);
         this.container = createContainer(this);
         this.slides = createSlides(this);
 
@@ -138,6 +146,12 @@ export class AutoCarousel {
     }
 }
 
+function mergeWithDefaultOptions(userOptions: AutoCarouselUserOptions): AutoCarouselOptions {
+    const mergedOptions = { ...userOptions, ...defaultOptions };
+
+    return mergedOptions;
+}
+
 function createContainer(autoCarousel: AutoCarousel): Container {
     const element = autoCarousel.element;
     const container = document.createElement("div");
@@ -193,7 +207,7 @@ function wrapInDiv(elementToWrap: Element): HTMLDivElement {
     return div;
 }
 
-function createSlide(element: Element, options: AutoCarouselOptions): Slide {
+function createSlide(element: Element, options: AutoCarouselUserOptions): Slide {
     const slide = wrapInDiv(element);
     slide.style.minWidth = "max-content";
     slide.style.paddingRight = `${options.gap}px`;

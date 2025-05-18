@@ -14,7 +14,12 @@
         "type": "git",
         "url": "git+https://github.com/brabli/auto-carousel.git"
     },
-    "keywords": ["carousel", "automatic", "slider", "simple"],
+    "keywords": [
+        "carousel",
+        "automatic",
+        "slider",
+        "simple"
+    ],
     "author": "brabli",
     "license": "MIT",
     "bugs": {
@@ -27,6 +32,7 @@
         "@types/node": "^22.15.3",
         "eslint": "^9.26.0",
         "globals": "^16.0.0",
+        "local-web-server": "^5.4.0",
         "tsup": "^8.0.0",
         "typescript": "^5.8.3",
         "typescript-eslint": "^8.31.1"

@@ -4,6 +4,7 @@ const textBoxes = document.querySelector(".text-boxes");
 
 new AutoCarousel(textBoxes, {
     stopOnHover: true,
+    align: "top",
 });
 
 const images = document.querySelector(".images");
@@ -12,6 +13,8 @@ new AutoCarousel(images, {
     speed: 1,
     gap: 32,
     direction: "right",
+    align: "bottom",
+    stopOnHover: true,
 });
 
 const small = document.querySelector(".small");

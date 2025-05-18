@@ -64,16 +64,20 @@ var AutoCarousel = class {
       const quarterWidth = this.container.offsetWidth / 2;
       this.container.style.marginLeft = `-${quarterWidth}px`;
     }
-    let scrollPosition = 0;
-    let lastTimestamp;
     if (this.options.stopOnHover) {
       this.container.addEventListener("mouseover", () => {
         this.hover = true;
+        this.container.style.willChange = "auto";
       });
       this.container.addEventListener("mouseout", () => {
         this.hover = false;
+        this.container.style.willChange = "transform";
       });
     }
+    let scrollPosition = 0;
+    let lastTimestamp;
+    let slideToRemove = getSlideToRemove(this);
+    let childWidth = slideToRemove.offsetWidth;
     function animateCarousel(timestamp, autoCarousel) {
       if (autoCarousel.hover) {
         lastTimestamp = void 0;
@@ -88,11 +92,6 @@ var AutoCarousel = class {
       lastTimestamp = timestamp;
       const speed = calculateSpeed(autoCarousel.options.speed, delta);
       scrollPosition += speed;
-      const slideToRemove = getSlideToRemove(autoCarousel);
-      const childWidth = slideToRemove.offsetWidth;
-      if (void 0 === childWidth) {
-        throw new Error("Child element width is undefined.");
-      }
       if (scrollPosition >= childWidth) {
         scrollPosition = 0;
         const clonedSlide = slideToRemove.cloneNode(true);
@@ -103,12 +102,14 @@ var AutoCarousel = class {
           autoCarousel.container.prepend(clonedSlide);
         }
         autoCarousel.container.removeChild(slideToRemove);
+        slideToRemove = getSlideToRemove(autoCarousel);
+        childWidth = slideToRemove.offsetWidth;
       }
       if ("left" === autoCarousel.options.direction) {
-        autoCarousel.container.style.transform = `translateX(-${scrollPosition}px)`;
+        autoCarousel.container.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
       }
       if ("right" === autoCarousel.options.direction) {
-        autoCarousel.container.style.transform = `translateX(${scrollPosition}px)`;
+        autoCarousel.container.style.transform = `translate3d(${scrollPosition}px, 0, 0)`;
       }
       requestAnimationFrame((timestamp2) => animateCarousel(timestamp2, autoCarousel));
     }
@@ -136,6 +137,7 @@ function createContainer(autoCarousel) {
   }
   element.appendChild(container);
   container.style.display = "flex";
+  container.style.willChange = "transform";
   switch (autoCarousel.options.align) {
     case "top":
       container.style.alignItems = "flex-start";

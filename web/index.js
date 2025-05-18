@@ -24,3 +24,16 @@ new AutoCarousel(small, {
     gap: 8,
     direction: "right",
 });
+
+const squaresMed = document.querySelector(".squares-med");
+new AutoCarousel(squaresMed, {
+    speed: 1.5,
+});
+
+const squaresSlow = document.querySelector(".squares-slow");
+new AutoCarousel(squaresSlow);
+
+const squaresFast = document.querySelector(".squares-fast");
+new AutoCarousel(squaresFast, {
+    speed: 2,
+});

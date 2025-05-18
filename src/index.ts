@@ -1,6 +1,7 @@
 export type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
 
 interface AutoCarouselOptions {
+    align: "top" | "middle" | "bottom";
     debug: boolean;
     direction: "left" | "right";
     gap: number;
@@ -9,6 +10,7 @@ interface AutoCarouselOptions {
 }
 
 const defaultOptions: AutoCarouselOptions = {
+    align: "middle",
     debug: false,
     direction: "left",
     gap: 32,
@@ -24,7 +26,7 @@ export class AutoCarousel {
     public element: HTMLElement;
     /** Options this instance of AutoCarousel is using. */
     public options: AutoCarouselOptions;
-    /** The element that hoAutoCarouselOptionslds the slides. */
+    /** The created element that holds the slides. */
     public container: Container;
     /** Original slide elements before any doubling occurs. */
     public slides: Slide[];
@@ -191,6 +193,18 @@ function createContainer(autoCarousel: AutoCarousel): Container {
 
     element.appendChild(container);
     container.style.display = "flex";
+
+    switch (autoCarousel.options.align) {
+        case "top":
+            container.style.alignItems = "flex-start";
+            break;
+        case "middle":
+            container.style.alignItems = "center";
+            break;
+        case "bottom":
+            container.style.alignItems = "flex-end";
+            break;
+    }
 
     return container;
 }

@@ -134,10 +134,6 @@ export class AutoCarousel {
             const slideToRemove = getSlideToRemove(autoCarousel);
             const childWidth = slideToRemove.offsetWidth;
 
-            if (undefined === childWidth) {
-                throw new Error("Child element width is undefined.");
-            }
-
             if (scrollPosition >= childWidth) {
                 scrollPosition = 0;
 

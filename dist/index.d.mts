@@ -1,3 +1,6 @@
+/**
+ * User specified options for AutoCarousel.
+ */
 type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
 interface AutoCarouselOptions {
     align: "top" | "middle" | "bottom";
@@ -8,16 +11,16 @@ interface AutoCarouselOptions {
     stopOnHover: boolean;
 }
 type Container = HTMLElement;
-type Slide = HTMLElement;
+/**
+ * Create an automatic carousel from an element and it's children.
+ */
 declare class AutoCarousel {
-    /** Initial wrapper element. */
+    /** Initial element. */
     element: HTMLElement;
     /** Options this instance of AutoCarousel is using. */
     options: AutoCarouselOptions;
-    /** The created element that holds the slides. */
+    /** The created container element that holds the slides. */
     container: Container;
-    /** Original slide elements before any doubling occurs. */
-    slides: Slide[];
     private hover;
     constructor(element: HTMLElement, options?: AutoCarouselUserOptions);
     private initialise;

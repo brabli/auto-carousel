@@ -32,20 +32,18 @@ var defaultOptions = {
   stopOnHover: false
 };
 var AutoCarousel = class {
-  /** Initial wrapper element. */
+  /** Initial element. */
   element;
   /** Options this instance of AutoCarousel is using. */
   options;
-  /** The created element that holds the slides. */
+  /** The created container element that holds the slides. */
   container;
-  /** Original slide elements before any doubling occurs. */
-  slides;
   hover;
   constructor(element, options = {}) {
     this.element = element;
     this.options = mergeWithDefaultOptions(options);
     this.container = createContainer(this);
-    this.slides = createSlides(this);
+    createSlides(this);
     this.hover = false;
     this.initialise();
   }

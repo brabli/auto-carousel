@@ -52,3 +52,14 @@ Display debug messages in the console. You probably don't want to use this in pr
 
 `stopOnHover: boolean` Pauses the carousel if the mouse is hovered over it. Carousel resumes again once the mouse leaves.
 
+## Contributing
+
+There are some `npm` commands you can run inside this repo:
+
+`npm run build` Build the minified package for prod.
+
+`npm run watch` Watch for changes and build the package on save.
+
+`npm run serve` Start a local web server using [local-web-server](https://www.npmjs.com/package/local-web-server). When writing this package I added a `/web` directory with a basic web page to test different carousel options.
+
+

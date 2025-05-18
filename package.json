@@ -14,12 +14,7 @@
         "type": "git",
         "url": "git+https://github.com/brabli/auto-carousel.git"
     },
-    "keywords": [
-        "carousel",
-        "automatic",
-        "slider",
-        "simple"
-    ],
+    "keywords": ["carousel", "automatic", "slider", "simple"],
     "author": "brabli",
     "license": "MIT",
     "bugs": {

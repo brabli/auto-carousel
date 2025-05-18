@@ -27,7 +27,8 @@ var defaultOptions = {
   debug: false,
   direction: "left",
   gap: 32,
-  speed: 1
+  speed: 1,
+  stopOnHover: false
 };
 var AutoCarousel = class {
   /** Initial wrapper element. */
@@ -38,11 +39,13 @@ var AutoCarousel = class {
   container;
   /** Original slide elements before any doubling occurs. */
   slides;
+  hover;
   constructor(element, options = {}) {
     this.element = element;
     this.options = mergeWithDefaultOptions(options);
     this.container = createContainer(this);
     this.slides = createSlides(this);
+    this.hover = false;
     this.initialise();
   }
   initialise() {
@@ -86,7 +89,24 @@ var AutoCarousel = class {
     }
     let scrollPosition = 0;
     let lastTimestamp;
+    if (this.options.stopOnHover) {
+      this.container.addEventListener("mouseover", () => {
+        this.hover = true;
+      });
+      this.container.addEventListener("mouseout", () => {
+        this.hover = false;
+      });
+    }
     function animateCarousel(timestamp, autoCarousel) {
+      if (autoCarousel.hover) {
+        lastTimestamp = void 0;
+        setTimeout(() => {
+          requestAnimationFrame(
+            (timestamp2) => animateCarousel(timestamp2, autoCarousel)
+          );
+        }, 100);
+        return;
+      }
       const delta = calculateDelta(timestamp, lastTimestamp);
       lastTimestamp = timestamp;
       const speed = calculateSpeed(autoCarousel.options.speed, delta);
@@ -117,6 +137,9 @@ var AutoCarousel = class {
     }
     requestAnimationFrame((timestamp) => animateCarousel(timestamp, this));
   }
+  /**
+   * Print a message to the console if the `debug` option is enabled.
+   */
   debug(message) {
     if (this.options.debug) {
       const sanitisedMessage = message.replace(/\n\s+/g, "\n").trim();
@@ -125,7 +148,7 @@ var AutoCarousel = class {
   }
 };
 function mergeWithDefaultOptions(userOptions) {
-  const mergedOptions = { ...userOptions, ...defaultOptions };
+  const mergedOptions = { ...defaultOptions, ...userOptions };
   return mergedOptions;
 }
 function createContainer(autoCarousel) {

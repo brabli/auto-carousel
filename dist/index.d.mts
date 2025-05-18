@@ -4,6 +4,7 @@ interface AutoCarouselOptions {
     direction: "left" | "right";
     gap: number;
     speed: number;
+    stopOnHover: boolean;
 }
 type Container = HTMLElement;
 type Slide = HTMLElement;
@@ -16,8 +17,12 @@ declare class AutoCarousel {
     container: Container;
     /** Original slide elements before any doubling occurs. */
     slides: Slide[];
+    private hover;
     constructor(element: HTMLElement, options?: AutoCarouselUserOptions);
     private initialise;
+    /**
+     * Print a message to the console if the `debug` option is enabled.
+     */
     private debug;
 }
 

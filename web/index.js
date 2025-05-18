@@ -8,21 +8,19 @@ new AutoCarousel(textBoxes, {
     direction: "right",
     debug: true,
 });
-//
-// const images = document.querySelector(".images");
-//
-// new AutoCarousel(images, {
-//     speed: 1,
-//     gap: 32,
-//     direction: "right",
-//     containerSelector: ".container",
-// });
-//
-// const small = document.querySelector(".small");
-//
-// new AutoCarousel(small, {
-//     speed: 1,
-//     gap: 8,
-//     direction: "right",
-//     containerSelector: ".container",
-// });
+
+const images = document.querySelector(".images");
+
+new AutoCarousel(images, {
+    speed: 1,
+    gap: 32,
+    direction: "right",
+});
+
+const small = document.querySelector(".small");
+
+new AutoCarousel(small, {
+    speed: 1,
+    gap: 8,
+    direction: "right",
+});

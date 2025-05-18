@@ -1,51 +1,48 @@
 // src/index.ts
 var AutoCarousel = class {
-  /** Initial element. */
+  /** Initial wrapper element. */
   element;
   /** Options this instance of AutoCarousel is using. */
   options;
   /** The element that holds the slides. */
   container;
+  /** Original slide elements before any doubling occurs. */
+  slides;
   constructor(element, options) {
     this.element = element;
     this.options = options;
-    this.container = getContainer(this);
+    this.container = createContainer(this);
+    this.slides = createSlides(this);
     this.initialise();
   }
   initialise() {
     this.element.style.overflowX = "hidden";
     this.element.style.display = "flex";
-    this.container.style.display = "flex";
-    turnChildrenIntoSlides(this);
     const updateContainerSize = (container) => {
-      let prevContainerWidth = 0;
-      let numberOfTimesDoubled = 0;
-      if (container.offsetWidth < window.innerWidth * 2) {
-        this.debug(`
-                    About to begin doubling container size.
-                    Window inner width: ${window.innerWidth}
-                    Container offset width: ${container.offsetWidth}
-                `);
+      const originalContainerWidth = container.offsetWidth;
+      const requiredMinimumWidth = window.innerWidth * 2;
+      const numberOfTimesToDouble = Math.ceil(
+        Math.max(0, Math.log2(requiredMinimumWidth / originalContainerWidth))
+      );
+      this.debug(
+        `Need to double ${numberOfTimesToDouble} time${s(numberOfTimesToDouble)} to reach required container width.`
+      );
+      if (numberOfTimesToDouble > 0) {
+        this.debug("About to begin doubling container size.");
       } else {
-        this.debug(`
-                    No need to double container size, it's wide enough.
-                    Window inner width: ${window.innerWidth}
-                    Container offset width: ${container.offsetWidth}
-                `);
+        this.debug(`No need to double container size, it's wide enough.`);
       }
-      while (container.offsetWidth < window.innerWidth * 2) {
-        if (12 === numberOfTimesDoubled) {
-          throw new Error(
-            "Container has doubled in size 12 times and still hasn't reached the size it needs to be, aborting to avoid crashing."
-          );
-        }
+      this.debug(`
+                Window inner width: ${window.innerWidth}
+                Container offset width: ${container.offsetWidth}
+            `);
+      let prevContainerWidth = 0;
+      for (let i = 0; i < numberOfTimesToDouble; i++) {
         doubleContainerSize(container);
-        numberOfTimesDoubled += 1;
-        this.debug(`Doubled container ${numberOfTimesDoubled} time/s.`);
         const newContainerWidth = container.offsetWidth;
         if (newContainerWidth <= prevContainerWidth) {
           throw new Error(
-            "[ERR] Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow."
+            "Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow."
           );
         }
         prevContainerWidth = newContainerWidth;
@@ -54,7 +51,7 @@ var AutoCarousel = class {
     updateContainerSize(this.container);
     window.addEventListener("resize", () => updateContainerSize(this.container));
     if ("right" === this.options.direction) {
-      const quarterWidth = this.container.offsetWidth / 4;
+      const quarterWidth = this.container.offsetWidth / 2;
       this.container.style.marginLeft = `-${quarterWidth}px`;
     }
     let scrollPosition = 0;
@@ -97,19 +94,23 @@ var AutoCarousel = class {
     }
   }
 };
-function getContainer(autoCarousel) {
-  const selector = autoCarousel.options.containerSelector;
-  const container = autoCarousel.element.querySelector(selector);
-  if (!(container instanceof HTMLElement)) {
-    throw new Error(`No container element found with the selector "${selector}".`);
+function createContainer(autoCarousel) {
+  const element = autoCarousel.element;
+  const container = document.createElement("div");
+  while (element.firstChild) {
+    container.appendChild(element.firstChild);
   }
+  element.appendChild(container);
+  container.style.display = "flex";
   return container;
 }
-function turnChildrenIntoSlides(autoCarousel) {
+function createSlides(autoCarousel) {
   const children = autoCarousel.container.children;
+  const slides = [];
   for (const child of children) {
-    createSlide(child, autoCarousel.options);
+    slides.push(createSlide(child, autoCarousel.options));
   }
+  return slides;
 }
 function calculateSpeed(speed, delta) {
   return speed * 0.05 * delta;
@@ -159,6 +160,9 @@ function getSlideToRemove(autoCarousel) {
     );
   }
   return slideToRemove;
+}
+function s(n) {
+  return n === 1 ? "" : "s";
 }
 export {
   AutoCarousel

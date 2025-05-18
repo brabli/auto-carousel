@@ -52,5 +52,3 @@ Display debug messages in the console. You probably don't want to use this in pr
 
 `stopOnHover: boolean` Pauses the carousel if the mouse is hovered over it. Carousel resumes again once the mouse leaves.
 
-
-

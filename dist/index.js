@@ -1,5 +1,239 @@
-"use strict";var h=Object.defineProperty;var b=Object.getOwnPropertyDescriptor;var w=Object.getOwnPropertyNames;var v=Object.prototype.hasOwnProperty;var C=(t,e)=>{for(var n in e)h(t,n,{get:e[n],enumerable:!0})},y=(t,e,n,o)=>{if(e&&typeof e=="object"||typeof e=="function")for(let r of w(e))!v.call(t,r)&&r!==n&&h(t,r,{get:()=>e[r],enumerable:!(o=b(e,r))||o.enumerable});return t};var A=t=>y(h({},"__esModule",{value:!0}),t);var q={};C(q,{AutoCarousel:()=>u});module.exports=A(q);var x={align:"middle",debug:!1,direction:"left",gap:32,speed:1,stopOnHover:!1},u=class{element;options;container;hover;constructor(e,n={}){this.element=e,this.options=E(n),this.container=O(this),W(this),this.hover=!1,this.initialise()}initialise(){this.element.style.overflowX="hidden",this.element.style.display="flex";let e=s=>{let i=s.offsetWidth,c=window.innerWidth*2,l=Math.ceil(Math.max(0,Math.log2(c/i)));this.debug(`Need to double ${l} time${I(l)} to reach required container width.`),l>0?this.debug("About to begin doubling container size."):this.debug("No need to double container size, it's wide enough."),this.debug(`
+"use strict";
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/index.ts
+var src_exports = {};
+__export(src_exports, {
+  AutoCarousel: () => AutoCarousel
+});
+module.exports = __toCommonJS(src_exports);
+var defaultOptions = {
+  align: "middle",
+  debug: false,
+  direction: "left",
+  gap: 32,
+  speed: 1,
+  stopOnHover: false
+};
+var AutoCarousel = class {
+  /** Initial element. */
+  element;
+  /** Options this instance of AutoCarousel is using. */
+  options;
+  /** The created container element that holds the slides. */
+  container;
+  hover;
+  constructor(element, options = {}) {
+    this.element = element;
+    this.options = mergeWithDefaultOptions(options);
+    this.container = createContainer(this);
+    createSlides(this);
+    this.hover = false;
+    this.initialise();
+  }
+  initialise() {
+    this.element.style.overflowX = "hidden";
+    this.element.style.display = "flex";
+    const updateContainerSize = (container) => {
+      const originalContainerWidth = container.offsetWidth;
+      const requiredMinimumWidth = window.innerWidth * 2;
+      const numberOfTimesToDouble = Math.ceil(
+        Math.max(0, Math.log2(requiredMinimumWidth / originalContainerWidth))
+      );
+      this.debug(
+        `Need to double ${numberOfTimesToDouble} time${s(numberOfTimesToDouble)} to reach required container width.`
+      );
+      if (numberOfTimesToDouble > 0) {
+        this.debug("About to begin doubling container size.");
+      } else {
+        this.debug(`No need to double container size, it's wide enough.`);
+      }
+      this.debug(`
                 Window inner width: ${window.innerWidth}
-                Container offset width: ${s.offsetWidth}
-            `);let d=0;for(let m=0;m<l;m++){$(s);let p=s.offsetWidth;if(p<=d)throw new Error("Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.");d=p}};if(e(this.container),window.addEventListener("resize",()=>e(this.container)),this.options.direction==="right"){let s=this.container.offsetWidth/2;this.container.style.marginLeft=`-${s}px`}this.options.stopOnHover&&(this.container.addEventListener("mouseover",()=>{this.hover=!0,this.container.style.willChange="auto"}),this.container.addEventListener("mouseout",()=>{this.hover=!1,this.container.style.willChange="transform"}));let n=0,o,r=g(this),f=r.offsetWidth;function a(s,i){if(i.hover){o=void 0,setTimeout(()=>{requestAnimationFrame(d=>a(d,i))},100);return}let c=T(s,o);o=s;let l=S(i.options.speed,c);if(n+=l,n>=f){n=0;let d=r.cloneNode(!0);i.options.direction==="left"&&i.container.appendChild(d),i.options.direction==="right"&&i.container.prepend(d),i.container.removeChild(r),r=g(i),f=r.offsetWidth}i.options.direction==="left"&&(i.container.style.transform=`translate3d(-${n}px, 0, 0)`),i.options.direction==="right"&&(i.container.style.transform=`translate3d(${n}px, 0, 0)`),requestAnimationFrame(d=>a(d,i))}requestAnimationFrame(s=>a(s,this))}debug(e){if(this.options.debug){let n=e.replace(/\n\s+/g,`
-`).trim();console.info(n)}}};function E(t){return{...x,...t}}function O(t){let e=t.element,n=document.createElement("div");for(;e.firstChild;)n.appendChild(e.firstChild);switch(e.appendChild(n),n.style.display="flex",n.style.willChange="transform",t.options.align){case"top":n.style.alignItems="flex-start";break;case"middle":n.style.alignItems="center";break;case"bottom":n.style.alignItems="flex-end";break}return n}function W(t){let e=t.container.children,n=[];for(let o of e)n.push(L(o,t.options));return n}function S(t,e){return t*.05*e}function T(t,e){return t-(e??t)}function $(t){let e=t.children.length;for(let n=0;n<e;n++){let o=t.children[n];if(o===void 0)throw new Error(`A child element within the container was undefined at index ${n}.`);t.appendChild(o.cloneNode(!0))}}function M(t){let e=document.createElement("div");return t.parentNode?.insertBefore(e,t),e.appendChild(t),e}function L(t,e){let n=M(t);return n.style.minWidth="max-content",n.style.paddingRight=`${e.gap}px`,n}function H(t){let e=t.options.direction;switch(e){case"left":return 0;case"right":return t.container.children.length-1;default:throw new Error(`Invalid direction in options "${e}".`)}}function g(t){let e=H(t),n=t.container.children[e];if(n===void 0)throw new Error(`Expected to find a slide to remove at index ${e}, however none was found.`);return n}function I(t){return t===1?"":"s"}0&&(module.exports={AutoCarousel});
+                Container offset width: ${container.offsetWidth}
+            `);
+      let prevContainerWidth = 0;
+      for (let i = 0; i < numberOfTimesToDouble; i++) {
+        doubleContainerSize(container);
+        const newContainerWidth = container.offsetWidth;
+        if (newContainerWidth <= prevContainerWidth) {
+          throw new Error(
+            "Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow."
+          );
+        }
+        prevContainerWidth = newContainerWidth;
+      }
+    };
+    updateContainerSize(this.container);
+    window.addEventListener("resize", () => updateContainerSize(this.container));
+    if ("right" === this.options.direction) {
+      const quarterWidth = this.container.offsetWidth / 2;
+      this.container.style.marginLeft = `-${quarterWidth}px`;
+    }
+    if (this.options.stopOnHover) {
+      this.container.addEventListener("mouseover", () => {
+        this.hover = true;
+        this.container.style.willChange = "auto";
+      });
+      this.container.addEventListener("mouseout", () => {
+        this.hover = false;
+        this.container.style.willChange = "transform";
+      });
+    }
+    let scrollPosition = 0;
+    let lastTimestamp;
+    let slideToRemove = getSlideToRemove(this);
+    let childWidth = slideToRemove.offsetWidth;
+    function animateCarousel(timestamp, autoCarousel) {
+      if (autoCarousel.hover) {
+        lastTimestamp = void 0;
+        setTimeout(() => {
+          requestAnimationFrame(
+            (timestamp2) => animateCarousel(timestamp2, autoCarousel)
+          );
+        }, 100);
+        return;
+      }
+      const delta = calculateDelta(timestamp, lastTimestamp);
+      lastTimestamp = timestamp;
+      const speed = calculateSpeed(autoCarousel.options.speed, delta);
+      scrollPosition += speed;
+      if (scrollPosition >= childWidth) {
+        scrollPosition = 0;
+        const clonedSlide = slideToRemove.cloneNode(true);
+        if ("left" === autoCarousel.options.direction) {
+          autoCarousel.container.appendChild(clonedSlide);
+        }
+        if ("right" === autoCarousel.options.direction) {
+          autoCarousel.container.prepend(clonedSlide);
+        }
+        autoCarousel.container.removeChild(slideToRemove);
+        slideToRemove = getSlideToRemove(autoCarousel);
+        childWidth = slideToRemove.offsetWidth;
+      }
+      if ("left" === autoCarousel.options.direction) {
+        autoCarousel.container.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
+      }
+      if ("right" === autoCarousel.options.direction) {
+        autoCarousel.container.style.transform = `translate3d(${scrollPosition}px, 0, 0)`;
+      }
+      requestAnimationFrame((timestamp2) => animateCarousel(timestamp2, autoCarousel));
+    }
+    requestAnimationFrame((timestamp) => animateCarousel(timestamp, this));
+  }
+  /**
+   * Print a message to the console if the `debug` option is enabled.
+   */
+  debug(message) {
+    if (this.options.debug) {
+      const sanitisedMessage = message.replace(/\n\s+/g, "\n").trim();
+      console.info(sanitisedMessage);
+    }
+  }
+};
+function mergeWithDefaultOptions(userOptions) {
+  const mergedOptions = { ...defaultOptions, ...userOptions };
+  return mergedOptions;
+}
+function createContainer(autoCarousel) {
+  const element = autoCarousel.element;
+  const container = document.createElement("div");
+  while (element.firstChild) {
+    container.appendChild(element.firstChild);
+  }
+  element.appendChild(container);
+  container.style.display = "flex";
+  container.style.willChange = "transform";
+  switch (autoCarousel.options.align) {
+    case "top":
+      container.style.alignItems = "flex-start";
+      break;
+    case "middle":
+      container.style.alignItems = "center";
+      break;
+    case "bottom":
+      container.style.alignItems = "flex-end";
+      break;
+  }
+  return container;
+}
+function createSlides(autoCarousel) {
+  const children = autoCarousel.container.children;
+  const slides = [];
+  for (const child of children) {
+    slides.push(createSlide(child, autoCarousel.options));
+  }
+  return slides;
+}
+function calculateSpeed(speed, delta) {
+  return speed * 0.05 * delta;
+}
+function calculateDelta(timestamp, lastTimestamp) {
+  return timestamp - (lastTimestamp ?? timestamp);
+}
+function doubleContainerSize(container) {
+  const numChildren = container.children.length;
+  for (let i = 0; i < numChildren; i++) {
+    const child = container.children[i];
+    if (void 0 === child) {
+      throw new Error(`A child element within the container was undefined at index ${i}.`);
+    }
+    container.appendChild(child.cloneNode(true));
+  }
+}
+function wrapInDiv(elementToWrap) {
+  const div = document.createElement("div");
+  elementToWrap.parentNode?.insertBefore(div, elementToWrap);
+  div.appendChild(elementToWrap);
+  return div;
+}
+function createSlide(element, options) {
+  const slide = wrapInDiv(element);
+  slide.style.minWidth = "max-content";
+  slide.style.paddingRight = `${options.gap}px`;
+  return slide;
+}
+function getSlideToRemoveIndex(autoCarousel) {
+  const direction = autoCarousel.options.direction;
+  switch (direction) {
+    case "left":
+      return 0;
+    case "right":
+      return autoCarousel.container.children.length - 1;
+    default:
+      throw new Error(`Invalid direction in options "${direction}".`);
+  }
+}
+function getSlideToRemove(autoCarousel) {
+  const slideToRemoveIndex = getSlideToRemoveIndex(autoCarousel);
+  const slideToRemove = autoCarousel.container.children[slideToRemoveIndex];
+  if (void 0 === slideToRemove) {
+    throw new Error(
+      `Expected to find a slide to remove at index ${slideToRemoveIndex}, however none was found.`
+    );
+  }
+  return slideToRemove;
+}
+function s(n) {
+  return n === 1 ? "" : "s";
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  AutoCarousel
+});

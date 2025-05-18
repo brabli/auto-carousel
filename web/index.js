@@ -2,7 +2,9 @@ import { AutoCarousel } from "../dist/index.mjs";
 
 const textBoxes = document.querySelector(".text-boxes");
 
-new AutoCarousel(textBoxes);
+new AutoCarousel(textBoxes, {
+    stopOnHover: true,
+});
 
 const images = document.querySelector(".images");
 

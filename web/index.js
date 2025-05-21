@@ -25,10 +25,7 @@ new AutoCarousel(small, {
     direction: "right",
 });
 
-const squaresMed = document.querySelector(".squares-med");
-new AutoCarousel(squaresMed, {
-    speed: 1.5,
-});
+new AutoCarousel(".squares-med", {});
 
 const squaresSlow = document.querySelector(".squares-slow");
 new AutoCarousel(squaresSlow);
@@ -37,3 +34,5 @@ const squaresFast = document.querySelector(".squares-fast");
 new AutoCarousel(squaresFast, {
     speed: 2,
 });
+
+new AutoCarousel(".empty", {});

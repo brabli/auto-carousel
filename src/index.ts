@@ -1,3 +1,5 @@
+import { debug } from "console";
+
 /**
  * User specified options for AutoCarousel.
  */
@@ -35,15 +37,23 @@ export class AutoCarousel {
     /** The created container element that holds the slides. */
     public container: Container;
 
-    private hover: boolean;
+    private hover = false;
 
-    constructor(element: HTMLElement, options: AutoCarouselUserOptions = {}) {
-        this.element = element;
+    /**
+     * @param {HTMLElement|string} element An HTML element or a CSS selector string
+     * @param {AutoCarouselUserOptions} options User specified options
+     */
+    constructor(element: HTMLElement | string, options: AutoCarouselUserOptions = {}) {
         this.options = mergeWithDefaultOptions(options);
+
+        if (typeof element === "string") {
+            this.debug(`Provided selector: ${element}`);
+        }
+
+        this.element = resolveElement(element);
         this.container = createContainer(this);
 
         createSlides(this);
-        this.hover = false;
 
         this.initialise();
     }
@@ -52,6 +62,10 @@ export class AutoCarousel {
         // Set initial required styles
         this.element.style.overflowX = "hidden";
         this.element.style.display = "flex";
+
+        if (0 === this.element.children.length) {
+            throw new Error("Provided element must have at least one child element, it has none.");
+        }
 
         const updateContainerSize = (container: Container) => {
             const originalContainerWidth = container.offsetWidth;
@@ -188,6 +202,20 @@ function mergeWithDefaultOptions(userOptions: AutoCarouselUserOptions): AutoCaro
     const mergedOptions = { ...defaultOptions, ...userOptions };
 
     return mergedOptions;
+}
+
+function resolveElement(element: HTMLElement | string): HTMLElement {
+    if (element instanceof HTMLElement) {
+        return element;
+    }
+
+    const foundElement = document.querySelector(element);
+
+    if (!(foundElement instanceof HTMLElement)) {
+        throw new Error(`No element found using the CSS selector "${element}".`);
+    }
+
+    return foundElement;
 }
 
 function createContainer(autoCarousel: AutoCarousel): Container {

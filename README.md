@@ -18,10 +18,17 @@ Initialise an instance of `AutoCarousel` with an `HTMLElement`:
 ```js
 import AutoCarousel from "auto-carousel";
 
-const elmt = document.getElementById('some-element');
+const elmt = document.getElementById("some-element");
 
 new AutoCarousel(elmt);
 ```
+
+Or just use a CSS selector:
+```js
+new AutoCarousel("#some-element");
+```
+
+All immediate children of the provided or found element will be treated as the carousel slides.
 
 ## Options
 
@@ -48,7 +55,7 @@ Display debug messages in the console. You probably don't want to use this in pr
 
 `gap: number` Gap between slides in pixels.
 
-`speed: number` Speed the carousel should move at. Set this based on vibe, `1` is the base speed while `0.5` is around half that speed while `2` is around double the speed, and so on.
+`speed: number` Speed the carousel should move at. Set this based on vibe, `1` is the base speed while `0.5` is around half that speed while `2` is around double the speed and so on.
 
 `stopOnHover: boolean` Pauses the carousel if the mouse is hovered over it. Carousel resumes again once the mouse leaves.
 

@@ -1,6 +1,8 @@
+![Image](https://github.com/user-attachments/assets/6932a98b-dba8-42ee-8124-15f9e48e55a3)
+
 # auto-carousel
 
-Zero dependency, easy to use, infinitely scrolling carousel for vanilla JavaScript or Typescript.
+A zero dependency, easy to use, infinitely scrolling carousel for vanilla JavaScript or Typescript.
 
 ## Installation
 

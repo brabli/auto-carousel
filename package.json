@@ -6,7 +6,7 @@
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
     "scripts": {
-        "build": "tsup --minify",
+        "build": "tsup",
         "watch": "tsup --watch",
         "serve": "ws"
     },
@@ -14,12 +14,7 @@
         "type": "git",
         "url": "git+https://github.com/brabli/auto-carousel.git"
     },
-    "keywords": [
-        "carousel",
-        "automatic",
-        "slider",
-        "simple"
-    ],
+    "keywords": ["carousel", "automatic", "slider", "simple"],
     "author": "brabli",
     "license": "MIT",
     "bugs": {

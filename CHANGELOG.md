@@ -1,5 +1,5 @@
 # Auto Carousel Changelog
 
-## 1.0.0 - XXX-XX-XX
+## 1.0.0 - 2025-05-22
 - Initial release
 

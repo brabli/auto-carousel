@@ -16,7 +16,7 @@ npm install auto-carousel
 Initialise an instance of `AutoCarousel` with an `HTMLElement`:
 
 ```js
-import AutoCarousel from "auto-carousel";
+import { AutoCarousel } from "auto-carousel";
 
 const elmt = document.getElementById("some-element");
 

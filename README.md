@@ -13,7 +13,15 @@ npm install auto-carousel
 ```
 ## Usage
 
-Initialise an instance of `AutoCarousel` with an `HTMLElement`:
+Initialise an instance of `AutoCarousel` with an `HTMLElement` that has child elements, for example:
+
+```html
+<div id="some-element">
+    <div>Slide 1</div>
+    <div>Slide 2</div>
+    <div>Slide 3</div>
+</div>
+```
 
 ```js
 import { AutoCarousel } from "auto-carousel";
@@ -28,14 +36,16 @@ Or just use a CSS selector:
 new AutoCarousel("#some-element");
 ```
 
-All immediate children of the provided or found element will be treated as the carousel slides.
+All immediate children of the provided or found element will be used as the carousel slides.
+
+You can also pass in some options to customise the behaviour of the carousel, see the section below.
 
 ## Options
 
-There are a few available *optional* options to customise the carousel behaviour. Default values are shown here:
+There are a few available *optional* options to customise the carousel behaviour. Options and their default values are shown here:
 
 ```ts
-new AutoCarousel(element, {
+new AutoCarousel(elmt, {
     align: "middle",
     debug: false,
     direction: "left",

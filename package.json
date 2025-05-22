@@ -1,6 +1,6 @@
 {
     "name": "auto-carousel",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "Easy to use automatic carousel",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
@@ -14,12 +14,7 @@
         "type": "git",
         "url": "git+https://github.com/brabli/auto-carousel.git"
     },
-    "keywords": [
-        "carousel",
-        "automatic",
-        "slider",
-        "simple"
-    ],
+    "keywords": ["carousel", "automatic", "slider", "simple"],
     "author": "brabli",
     "license": "MIT",
     "bugs": {

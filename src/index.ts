@@ -53,7 +53,17 @@ export class AutoCarousel {
 
         createSlides(this);
 
-        this.initialise();
+        // If images exist, wait for them to load first so we can properly determine
+        // the width of the container.
+        if (hasImages(this.container)) {
+            const images = getImages(this.container);
+            this.debug(
+                `Waiting for ${images.length} image${s(images.length)} to load before continuing initialisation.`,
+            );
+            waitForImagesToLoad(images, () => this.initialise());
+        } else {
+            this.initialise();
+        }
     }
 
     private initialise(): void {
@@ -189,6 +199,27 @@ export class AutoCarousel {
             console.info(`[AUTO-CAROUSEL DEBUG]\n${sanitisedMessage}`);
         }
     }
+}
+
+/** Wait for images to load, then run the callback on success. */
+function waitForImagesToLoad(images: HTMLImageElement[], callback: () => void): void {
+    const loadingImages = images.map((i) => i.decode());
+
+    Promise.all(loadingImages)
+        .then(callback)
+        .catch((reason: Error) => {
+            console.error(
+                `Failed to start auto-carousel because an image failed to load.\nMessage: ${reason.message}`,
+            );
+        });
+}
+
+function hasImages(container: Container): boolean {
+    return null !== container.querySelector("img");
+}
+
+function getImages(container: Container): HTMLImageElement[] {
+    return Array.from(container.querySelectorAll("img"));
 }
 
 function mergeWithDefaultOptions(userOptions: AutoCarouselUserOptions): AutoCarouselOptions {

@@ -72,20 +72,15 @@ export class AutoCarousel {
                 Math.max(0, Math.log2(requiredMinimumWidth / originalContainerWidth)),
             );
 
-            this.debug(
-                `Need to double ${numberOfTimesToDouble} time${s(numberOfTimesToDouble)} to reach required container width.`,
-            );
-
             if (numberOfTimesToDouble > 0) {
-                this.debug("About to begin doubling container size.");
+                this.debug(`
+                    The window's width is ${window.innerWidth}px.
+                    The container's width is ${container.offsetWidth}px.
+                    Need to double number of slides ${numberOfTimesToDouble} time${s(numberOfTimesToDouble)} to reach required container width of ${requiredMinimumWidth}px.`);
             } else {
-                this.debug(`No need to double container size, it's wide enough.`);
+                this.debug(`No need to increase container size, it's wide enough.`);
+                return;
             }
-
-            this.debug(`
-                Window inner width: ${window.innerWidth}
-                Container offset width: ${container.offsetWidth}
-            `);
 
             let prevContainerWidth = 0;
 
@@ -96,7 +91,7 @@ export class AutoCarousel {
 
                 if (newContainerWidth <= prevContainerWidth) {
                     throw new Error(
-                        "Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.",
+                        `Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.\nPrevious width: ${prevContainerWidth}px\nNew width: ${newContainerWidth}`,
                     );
                 }
 
@@ -310,7 +305,6 @@ function getSlideToRemoveIndex(autoCarousel: AutoCarousel): number {
 
 function getSlideToRemove(autoCarousel: AutoCarousel): Slide {
     const slideToRemoveIndex = getSlideToRemoveIndex(autoCarousel);
-
     const slideToRemove = autoCarousel.container.children[slideToRemoveIndex];
 
     if (undefined === slideToRemove) {

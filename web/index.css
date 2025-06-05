@@ -15,6 +15,7 @@ h1 {
     border: 1px solid black;
     border-radius: 1rem;
     background-color: red;
+    height: 100%;
     color: white;
 }
 

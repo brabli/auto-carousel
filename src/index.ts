@@ -49,8 +49,11 @@ export class AutoCarousel {
         }
 
         this.element = resolveElement(element);
-        this.container = createContainer(this);
+        // Set initial required styles early to prevent vertical content stacks while things load
+        this.element.style.display = "flex";
+        this.element.style.overflowX = "hidden";
 
+        this.container = createContainer(this);
         createSlides(this);
 
         // If images exist, wait for them to load first so we can properly determine
@@ -67,10 +70,6 @@ export class AutoCarousel {
     }
 
     private initialise(): void {
-        // Set initial required styles
-        this.element.style.overflowX = "hidden";
-        this.element.style.display = "flex";
-
         if (0 === this.element.children.length) {
             throw new Error("Provided element must have at least one child element, it has none.");
         }

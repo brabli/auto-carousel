@@ -91,7 +91,7 @@ export class AutoCarousel {
 
                 if (newContainerWidth <= prevContainerWidth) {
                     throw new Error(
-                        `Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.\nPrevious width: ${prevContainerWidth}px\nNew width: ${newContainerWidth}`,
+                        `Something went wrong while doubling container elements; the container either stayed the same width or it shrunk somehow.\nNumber of slides: ${container.children.length}\nPrevious width:   ${prevContainerWidth}px\nNew width:        ${newContainerWidth}px\n`,
                     );
                 }
 
@@ -186,7 +186,7 @@ export class AutoCarousel {
     private debug(message: string): void {
         if (this.options.debug) {
             const sanitisedMessage = message.replace(/\n\s+/g, "\n").trim();
-            console.info(sanitisedMessage);
+            console.info(`[AUTO-CAROUSEL DEBUG]\n${sanitisedMessage}`);
         }
     }
 }

@@ -1,5 +1,3 @@
-import { debug } from "console";
-
 /**
  * User specified options for AutoCarousel.
  */

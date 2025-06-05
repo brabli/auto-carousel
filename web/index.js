@@ -14,6 +14,7 @@ new AutoCarousel(images, {
     gap: 32,
     direction: "right",
     align: "bottom",
+    debug: true,
     stopOnHover: true,
 });
 

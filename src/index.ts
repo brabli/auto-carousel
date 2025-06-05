@@ -4,7 +4,7 @@
 export type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
 
 interface AutoCarouselOptions {
-    align: "top" | "middle" | "bottom";
+    align: "top" | "middle" | "bottom" | "stretch";
     debug: boolean;
     direction: "left" | "right";
     gap: number;
@@ -237,6 +237,9 @@ function createContainer(autoCarousel: AutoCarousel): Container {
             break;
         case "bottom":
             container.style.alignItems = "flex-end";
+            break;
+        case "stretch":
+            container.style.alignItems = "stretch";
             break;
     }
 

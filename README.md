@@ -55,8 +55,8 @@ new AutoCarousel(elmt, {
 })
 ```
 
-`align: "top" | "middle" | "bottom"`
-Align the slides at the top, middle or bottom of the container respectively.
+`align: "top" | "middle" | "bottom" | "stretch"`
+Align the slides at the top, middle or bottom of the container respectively, or stretch them to the height of the container.
 
 `debug: boolean`
 Display debug messages in the console. You probably don't want to use this in prod.

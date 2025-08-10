@@ -31,8 +31,8 @@
         "@biomejs/biome": "2.1.2",
         "@types/node": "^22.17.1",
         "local-web-server": "^5.4.0",
-        "tsup": "^8.5.0",
-        "typescript": "^5.9.2",
-        "only-allow": "^1.2.1"
+        "only-allow": "^1.2.1",
+        "tsup": "^8.0.0",
+        "typescript": "^5.9.2"
     }
 }

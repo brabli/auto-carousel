@@ -71,12 +71,12 @@ Display debug messages in the console. You probably don't want to use this in pr
 
 ## Contributing
 
-There are some `npm` commands you can run inside this repo:
+There are some `pnpm` commands you can run inside this repo:
 
-`npm run build` Build the minified package for prod.
+`pnpm run build` Build the minified package for prod.
 
-`npm run watch` Watch for changes and build the package on save.
+`pnpm run watch` Watch for changes and build the package on save.
 
-`npm run serve` Start a local web server using [local-web-server](https://www.npmjs.com/package/local-web-server). When writing this package I added a `/web` directory with a basic web page to test different carousel options.
+`pnpm run serve` Start a local web server using [local-web-server](https://www.npmjs.com/package/local-web-server). When writing this package I added a `/web` directory with a basic web page to test different carousel options.
 
 

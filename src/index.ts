@@ -174,7 +174,7 @@ export class AutoCarousel {
                 childWidth = slideToRemove.offsetWidth;
             }
 
-            // Apparently, using qtranslate3d instead of translateX makes the browser "more likely" to use the GPU,
+            // Apparently, using translate3d instead of translateX makes the browser "more likely" to use the GPU,
             // Don't quote me on that though...
             if ("left" === autoCarousel.options.direction) {
                 autoCarousel.container.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;

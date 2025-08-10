@@ -4,6 +4,7 @@
 
 ## X.X.X - XXXX-XX-XX
 - Update project to use `pnpm` to manage dev dependencies
+- Replace window resize listener with a mutation observer
 
 ## 1.1.0 - 2025-06-05
 - Add `stretch` as available value for `align` option

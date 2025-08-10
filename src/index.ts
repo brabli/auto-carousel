@@ -74,6 +74,20 @@ export class AutoCarousel {
             throw new Error("Provided element must have at least one child element, it has none.");
         }
 
+        const slides = getSlides(this.container);
+        const largestSlideWidth = findLargestSlideWidth(slides);
+
+        if (largestSlideWidth > window.innerWidth) {
+            this.debug(
+                `A slide is ${largestSlideWidth}px, which is wider than the window (${window.innerWidth}px). Doubling container once to compensate.`,
+            );
+            doubleContainerSize(this.container);
+        }
+
+        function findLargestSlideWidth(slides: Slide[]): number {
+            return Math.max(...slides.map((slide) => slide.offsetWidth));
+        }
+
         const updateContainerSize = (container: Container) => {
             const originalContainerWidth = container.offsetWidth;
             const requiredMinimumWidth = window.innerWidth * 2;
@@ -95,6 +109,7 @@ export class AutoCarousel {
 
             for (let i = 0; i < numberOfTimesToDouble; i++) {
                 const numberOfSlides = container.children.length;
+
                 if (numberOfSlides > 1000) {
                     throw new Error(
                         "The number of slides is over 1000. This was probably not meant to happen, so auto-carousel has crashed to try save the browser itself from crashing. A noble sacrifice.",
@@ -356,4 +371,8 @@ function getSlideToRemove(autoCarousel: AutoCarousel): Slide {
 
 function s(n: number): string {
     return n === 1 ? "" : "s";
+}
+
+function getSlides(container: Container): Slide[] {
+    return Array.from(container.children) as Slide[];
 }

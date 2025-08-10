@@ -2,7 +2,7 @@
 
 ## X.X.X - XXXX-XX-XX
 
-## X.X.X - XXXX-XX-XX
+## 1.2.0 - 2025-08-10
 - Update project to use `pnpm` to manage dev dependencies
 - Replace window resize listener with a mutation observer
 - Add additional check on the number of slides, crashing the carousel if it's too many (>1000). This is to prevent bugs that would otherwise cause the browser to crash.

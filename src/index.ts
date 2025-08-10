@@ -110,7 +110,8 @@ export class AutoCarousel {
 
         updateContainerSize(this.container);
 
-        window.addEventListener("resize", () => updateContainerSize(this.container));
+        const resizeObserver = new ResizeObserver(() => updateContainerSize(this.container));
+        resizeObserver.observe(this.element);
 
         // Move container left a bit to hide elements appearing on the left
         if ("right" === this.options.direction) {
@@ -173,8 +174,8 @@ export class AutoCarousel {
                 childWidth = slideToRemove.offsetWidth;
             }
 
-            // Apparently using translate3d instead of translateX makes the browser "more likely" to use the GPU,
-            // don't quote me on that though...
+            // Apparently, using qtranslate3d instead of translateX makes the browser "more likely" to use the GPU,
+            // Don't quote me on that though...
             if ("left" === autoCarousel.options.direction) {
                 autoCarousel.container.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
             }

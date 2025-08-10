@@ -36,6 +36,7 @@ export class AutoCarousel {
     public container: Container;
 
     private hover = false;
+    private newSlideAdded = false;
 
     /**
      * @param {HTMLElement|string} element An HTML element or a CSS selector string
@@ -94,7 +95,7 @@ export class AutoCarousel {
             let prevContainerWidth = 0;
 
             for (let i = 0; i < numberOfTimesToDouble; i++) {
-                doubleContainerSize(container);
+                this.doubleContainerSize(container);
 
                 const newContainerWidth = container.offsetWidth;
 
@@ -155,9 +156,14 @@ export class AutoCarousel {
             const speed = calculateSpeed(autoCarousel.options.speed, delta);
             scrollPosition += speed;
 
-            if (scrollPosition >= childWidth) {
-                scrollPosition = 0;
+            // This check makes sure we don't run into issues with extra large slides
+            const scrolledFurtherThanWindow = scrollPosition > window.innerWidth;
+            const scrolledPastCurrentSlide = scrollPosition >= childWidth;
 
+            if (
+                false === autoCarousel.newSlideAdded &&
+                (scrolledFurtherThanWindow || scrolledPastCurrentSlide)
+            ) {
                 const clonedSlide = slideToRemove.cloneNode(true);
 
                 if ("left" === autoCarousel.options.direction) {
@@ -168,13 +174,20 @@ export class AutoCarousel {
                     autoCarousel.container.prepend(clonedSlide);
                 }
 
+                autoCarousel.newSlideAdded = true;
+            }
+
+            if (true === autoCarousel.newSlideAdded && scrolledPastCurrentSlide) {
+                scrollPosition = 0;
+
                 autoCarousel.container.removeChild(slideToRemove);
+                autoCarousel.newSlideAdded = false;
 
                 slideToRemove = getSlideToRemove(autoCarousel);
                 childWidth = slideToRemove.offsetWidth;
             }
 
-            // Apparently, using qtranslate3d instead of translateX makes the browser "more likely" to use the GPU,
+            // Apparently, using translate3d instead of translateX makes the browser "more likely" to use the GPU,
             // Don't quote me on that though...
             if ("left" === autoCarousel.options.direction) {
                 autoCarousel.container.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
@@ -188,6 +201,33 @@ export class AutoCarousel {
         }
 
         requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, this));
+    }
+
+    private doubleContainerSize(container: Container): void {
+        const numChildren = container.children.length;
+
+        let i = this.newSlideAdded ? 1 : 0; // Skip cloning first slide if it has already been cloned and added
+
+        for (i; i < numChildren; i++) {
+            const isLastSlide = i === numChildren - 1;
+
+            if (true === this.newSlideAdded && isLastSlide) {
+                // Skip making a clone of the last slide as it's a clone itself and we'd end up with duplicates
+                break;
+            }
+
+            const child = container.children[i];
+
+            if (undefined === child) {
+                throw new Error(
+                    `A child element within the container was undefined at index ${i}.`,
+                );
+            }
+
+            container.appendChild(child.cloneNode(true));
+        }
+
+        this.newSlideAdded = false; // We can reset this field now as we've updated the number of slides
     }
 
     /**
@@ -289,20 +329,6 @@ function calculateSpeed(speed: number, delta: number): number {
 
 function calculateDelta(timestamp: number, lastTimestamp: number | undefined): number {
     return timestamp - (lastTimestamp ?? timestamp);
-}
-
-function doubleContainerSize(container: Container): void {
-    const numChildren = container.children.length;
-
-    for (let i = 0; i < numChildren; i++) {
-        const child = container.children[i];
-
-        if (undefined === child) {
-            throw new Error(`A child element within the container was undefined at index ${i}.`);
-        }
-
-        container.appendChild(child.cloneNode(true));
-    }
 }
 
 function wrapInDiv(elementToWrap: Element): HTMLDivElement {

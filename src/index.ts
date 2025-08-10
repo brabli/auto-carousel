@@ -94,6 +94,13 @@ export class AutoCarousel {
             let prevContainerWidth = 0;
 
             for (let i = 0; i < numberOfTimesToDouble; i++) {
+                const numberOfSlides = container.children.length;
+                if (numberOfSlides > 1000) {
+                    throw new Error(
+                        "The number of slides is over 1000. This was probably not meant to happen, so auto-carousel has crashed to try save the browser itself from crashing. A noble sacrifice.",
+                    );
+                }
+
                 doubleContainerSize(container);
 
                 const newContainerWidth = container.offsetWidth;

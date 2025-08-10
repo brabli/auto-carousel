@@ -3,3 +3,5 @@ web/
 biome.json
 tsconfig.json
 tsup.config.ts
+pnpm-lock.yaml
+pnpm-workspace.yaml

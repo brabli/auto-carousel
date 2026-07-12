@@ -153,12 +153,12 @@ export class AutoCarousel {
         }
 
         if (this.options.stopOnHover) {
-            this.container.addEventListener("mouseover", () => {
+            this.container.addEventListener("mouseenter", () => {
                 this.hover = true;
                 this.container.style.willChange = "auto";
             });
 
-            this.container.addEventListener("mouseout", () => {
+            this.container.addEventListener("mouseleave", () => {
                 this.hover = false;
                 this.container.style.willChange = "transform";
             });

@@ -357,7 +357,7 @@ function wrapInDiv(elementToWrap: Element): HTMLDivElement {
     return div;
 }
 
-function createSlide(element: Element, options: AutoCarouselUserOptions): Slide {
+function createSlide(element: Element, options: AutoCarouselOptions): Slide {
     const slide = wrapInDiv(element);
     slide.style.minWidth = "max-content";
     slide.style.paddingRight = `${options.gap}px`;

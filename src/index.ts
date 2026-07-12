@@ -148,8 +148,8 @@ export class AutoCarousel {
 
         // Move container left a bit to hide elements appearing on the left
         if ("right" === this.options.direction) {
-            const quarterWidth = this.container.offsetWidth / 2;
-            this.container.style.marginLeft = `-${quarterWidth}px`;
+            const halfWidth = this.container.offsetWidth / 2;
+            this.container.style.marginLeft = `-${halfWidth}px`;
         }
 
         if (this.options.stopOnHover) {

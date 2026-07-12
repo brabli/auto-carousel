@@ -49,6 +49,11 @@ export class AutoCarousel {
         }
 
         this.element = resolveElement(element);
+
+        if (0 === this.element.children.length) {
+            throw new Error("Provided element must have at least one child element; it has none.");
+        }
+
         // Set initial required styles early to prevent vertical content stacks while things load
         this.element.style.display = "flex";
         this.element.style.overflowX = "hidden";
@@ -70,10 +75,6 @@ export class AutoCarousel {
     }
 
     private initialise(): void {
-        if (0 === this.element.children.length) {
-            throw new Error("Provided element must have at least one child element, it has none.");
-        }
-
         const slides = getSlides(this.container);
         const largestSlideWidth = findLargestSlideWidth(slides);
 

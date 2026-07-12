@@ -275,7 +275,7 @@ function createContainer(autoCarousel: AutoCarousel): Container {
 
     element.appendChild(container);
     container.style.display = "flex";
-    container.style.willChange = "transform"; // Optimisation
+    container.style.willChange = "transform"; // Optimisation(?)
 
     switch (autoCarousel.options.align) {
         case "top":

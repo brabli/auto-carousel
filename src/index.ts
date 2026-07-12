@@ -163,8 +163,7 @@ export class AutoCarousel {
 
         let scrollPosition = 0;
         let lastTimestamp: number | undefined;
-        let slideToRemove = getSlideToRemove(this);
-        let childWidth = slideToRemove.offsetWidth;
+        let childWidth = getEdgeSlide(this).offsetWidth;
 
         function animateCarousel(timestamp: number, autoCarousel: AutoCarousel): void {
             if (autoCarousel.prefersReducedMotion) {
@@ -187,20 +186,17 @@ export class AutoCarousel {
             if (scrollPosition >= childWidth) {
                 scrollPosition = 0;
 
-                const clonedSlide = slideToRemove.cloneNode(true);
+                const edgeSlide = getEdgeSlide(autoCarousel);
 
                 if ("left" === autoCarousel.options.direction) {
-                    autoCarousel.container.appendChild(clonedSlide);
+                    autoCarousel.container.appendChild(edgeSlide);
                 }
 
                 if ("right" === autoCarousel.options.direction) {
-                    autoCarousel.container.prepend(clonedSlide);
+                    autoCarousel.container.prepend(edgeSlide);
                 }
 
-                autoCarousel.container.removeChild(slideToRemove);
-
-                slideToRemove = getSlideToRemove(autoCarousel);
-                childWidth = slideToRemove.offsetWidth;
+                childWidth = getEdgeSlide(autoCarousel).offsetWidth;
             }
 
             // Apparently, using translate3d instead of translateX makes the browser "more likely" to use the GPU,
@@ -369,7 +365,7 @@ function createSlide(element: Element, options: AutoCarouselOptions): Slide {
     return slide;
 }
 
-function getSlideToRemoveIndex(autoCarousel: AutoCarousel): number {
+function getEdgeSlideIndex(autoCarousel: AutoCarousel): number {
     const direction = autoCarousel.options.direction;
 
     switch (direction) {
@@ -382,17 +378,17 @@ function getSlideToRemoveIndex(autoCarousel: AutoCarousel): number {
     }
 }
 
-function getSlideToRemove(autoCarousel: AutoCarousel): Slide {
-    const slideToRemoveIndex = getSlideToRemoveIndex(autoCarousel);
-    const slideToRemove = autoCarousel.container.children[slideToRemoveIndex];
+function getEdgeSlide(autoCarousel: AutoCarousel): Slide {
+    const edgeSlideIndex = getEdgeSlideIndex(autoCarousel);
+    const edgeSlide = autoCarousel.container.children[edgeSlideIndex];
 
-    if (undefined === slideToRemove) {
+    if (undefined === edgeSlide) {
         throw new Error(
-            `Expected to find a slide to remove at index ${slideToRemoveIndex}, however none was found.`,
+            `Expected to find an edge slide at index ${edgeSlideIndex}, however none was found.`,
         );
     }
 
-    return slideToRemove as Slide;
+    return edgeSlide as Slide;
 }
 
 function s(n: number): string {

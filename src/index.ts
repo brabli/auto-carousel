@@ -5,7 +5,7 @@ import { assertOptionsAreValid } from "./assertOptionsAreValid";
  */
 export type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
 
-interface AutoCarouselOptions {
+export interface AutoCarouselOptions {
     align: "top" | "middle" | "bottom" | "stretch";
     debug: boolean;
     direction: "left" | "right";

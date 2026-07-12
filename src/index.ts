@@ -306,15 +306,13 @@ function createContainer(autoCarousel: AutoCarousel): Container {
     return container;
 }
 
-function createSlides(autoCarousel: AutoCarousel): Slide[] {
+function createSlides(autoCarousel: AutoCarousel): void {
     const children = autoCarousel.container.children;
     const slides = [];
 
     for (const child of children) {
         slides.push(createSlide(child, autoCarousel.options));
     }
-
-    return slides;
 }
 
 function calculateSpeed(speed: number, delta: number): number {

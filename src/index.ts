@@ -1,27 +1,8 @@
-import { assertOptionsAreValid } from "./assertOptionsAreValid";
-
-/**
- * User specified options for AutoCarousel.
- */
-export type AutoCarouselUserOptions = Partial<AutoCarouselOptions>;
-
-export interface AutoCarouselOptions {
-    align: "top" | "middle" | "bottom" | "stretch";
-    debug: boolean;
-    direction: "left" | "right";
-    gap: number;
-    speed: number;
-    stopOnHover: boolean;
-}
-
-const defaultOptions: AutoCarouselOptions = {
-    align: "middle",
-    debug: false,
-    direction: "left",
-    gap: 32,
-    speed: 1,
-    stopOnHover: false,
-};
+import {
+    type AutoCarouselOptions,
+    type PartialAutoCarouselOptions,
+    resolveOptions,
+} from "./options";
 
 type Container = HTMLElement;
 type Slide = HTMLElement;
@@ -44,7 +25,7 @@ export class AutoCarousel {
      * @param {HTMLElement|string} element An HTML element or a CSS selector string
      * @param {AutoCarouselUserOptions} options User specified options
      */
-    constructor(element: HTMLElement | string, options: AutoCarouselUserOptions = {}) {
+    constructor(element: HTMLElement | string, options: PartialAutoCarouselOptions = {}) {
         const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
         this.prefersReducedMotion = reducedMotionQuery.matches;
 
@@ -61,8 +42,7 @@ export class AutoCarousel {
             );
         });
 
-        this.options = mergeWithDefaultOptions(options);
-        assertOptionsAreValid(this.options);
+        this.options = resolveOptions(options);
 
         if (typeof element === "string") {
             this.debug(`Provided selector: ${element}`);
@@ -286,12 +266,6 @@ function hasImages(container: Container): boolean {
 
 function getImages(container: Container): HTMLImageElement[] {
     return Array.from(container.querySelectorAll("img"));
-}
-
-function mergeWithDefaultOptions(userOptions: AutoCarouselUserOptions): AutoCarouselOptions {
-    const mergedOptions = { ...defaultOptions, ...userOptions };
-
-    return mergedOptions;
 }
 
 function resolveElement(element: HTMLElement | string): HTMLElement {

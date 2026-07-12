@@ -238,13 +238,14 @@ export class AutoCarousel {
 function waitForImagesToLoad(images: HTMLImageElement[], callback: () => void): void {
     const loadingImages = images.map((i) => i.decode());
 
-    Promise.all(loadingImages)
-        .then(callback)
-        .catch((reason: Error) => {
+    Promise.all(loadingImages).then(
+        () => callback(),
+        (reason: Error) => {
             console.error(
                 `Failed to start auto-carousel because an image failed to load.\nMessage: ${reason.message}`,
             );
-        });
+        },
+    );
 }
 
 function hasImages(container: Container): boolean {

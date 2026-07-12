@@ -38,12 +38,29 @@ export class AutoCarousel {
     public container: Container;
 
     private hover = false;
+    private prefersReducedMotion = false;
 
     /**
      * @param {HTMLElement|string} element An HTML element or a CSS selector string
      * @param {AutoCarouselUserOptions} options User specified options
      */
     constructor(element: HTMLElement | string, options: AutoCarouselUserOptions = {}) {
+        const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        this.prefersReducedMotion = reducedMotionQuery.matches;
+
+        if (this.prefersReducedMotion) {
+            this.debug("The user has requested reduced motion; the carousel will not animate.");
+        }
+
+        reducedMotionQuery.addEventListener("change", (event) => {
+            this.prefersReducedMotion = event.matches;
+            this.debug(
+                event.matches
+                    ? "The user enabled reduced motion; the carousel will stop animating."
+                    : "The user disabled reduced motion; the carousel will resume animating.",
+            );
+        });
+
         this.options = mergeWithDefaultOptions(options);
         assertOptionsAreValid(this.options);
 
@@ -170,14 +187,13 @@ export class AutoCarousel {
         let childWidth = slideToRemove.offsetWidth;
 
         function animateCarousel(timestamp: number, autoCarousel: AutoCarousel): void {
-            if (autoCarousel.hover) {
-                lastTimestamp = undefined; // Animation jumps on mouseout if timestamp is not reset
+            if (autoCarousel.prefersReducedMotion) {
+                pauseAnimation(1000);
+                return;
+            }
 
-                setTimeout(() => {
-                    requestAnimationFrame((timestamp: number) =>
-                        animateCarousel(timestamp, autoCarousel),
-                    );
-                }, 100); // Check every 100ms whether to resume or not
+            if (autoCarousel.hover) {
+                pauseAnimation(100);
                 return;
             }
 
@@ -218,6 +234,19 @@ export class AutoCarousel {
             }
 
             requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, autoCarousel));
+
+            /**
+             * Pause animation for the duration provided
+             */
+            function pauseAnimation(msDelay: number) {
+                lastTimestamp = undefined;
+
+                setTimeout(() => {
+                    requestAnimationFrame((timestamp: number) =>
+                        animateCarousel(timestamp, autoCarousel),
+                    );
+                }, msDelay);
+            }
         }
 
         requestAnimationFrame((timestamp: number) => animateCarousel(timestamp, this));

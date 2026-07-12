@@ -94,6 +94,13 @@ export class AutoCarousel {
 
         const updateContainerSize = (container: Container) => {
             const originalContainerWidth = container.offsetWidth;
+
+            if (0 === originalContainerWidth) {
+                throw new Error(
+                    "The carousel's slides have a combined width of 0px, so the container can never be grown to fill the window.",
+                );
+            }
+
             const requiredMinimumWidth = window.innerWidth * 2;
             const numberOfTimesToDouble = Math.ceil(
                 Math.max(0, Math.log2(requiredMinimumWidth / originalContainerWidth)),

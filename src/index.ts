@@ -1,3 +1,5 @@
+import { assertOptionsAreValid } from "./assertOptionsAreValid";
+
 /**
  * User specified options for AutoCarousel.
  */
@@ -43,6 +45,7 @@ export class AutoCarousel {
      */
     constructor(element: HTMLElement | string, options: AutoCarouselUserOptions = {}) {
         this.options = mergeWithDefaultOptions(options);
+        assertOptionsAreValid(this.options);
 
         if (typeof element === "string") {
             this.debug(`Provided selector: ${element}`);

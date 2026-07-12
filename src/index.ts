@@ -77,7 +77,7 @@ export class AutoCarousel {
         }
     }
 
-    private initialise(): void {
+    private async initialise(): Promise<void> {
         const slides = getSlides(this.container);
         const largestSlideWidth = findLargestSlideWidth(slides);
 
@@ -85,14 +85,14 @@ export class AutoCarousel {
             this.debug(
                 `A slide is ${largestSlideWidth}px, which is wider than the window (${window.innerWidth}px). Doubling container once to compensate.`,
             );
-            doubleContainerSize(this.container);
+            await doubleContainerSize(this.container);
         }
 
         function findLargestSlideWidth(slides: Slide[]): number {
             return Math.max(...slides.map((slide) => slide.offsetWidth));
         }
 
-        const updateContainerSize = (container: Container) => {
+        const updateContainerSize = async (container: Container) => {
             const originalContainerWidth = container.offsetWidth;
 
             if (0 === originalContainerWidth) {
@@ -127,7 +127,7 @@ export class AutoCarousel {
                     );
                 }
 
-                doubleContainerSize(container);
+                await doubleContainerSize(container);
 
                 const newContainerWidth = container.offsetWidth;
 
@@ -141,9 +141,9 @@ export class AutoCarousel {
             }
         };
 
-        updateContainerSize(this.container);
+        await updateContainerSize(this.container);
 
-        const resizeObserver = new ResizeObserver(() => updateContainerSize(this.container));
+        const resizeObserver = new ResizeObserver(() => void updateContainerSize(this.container));
         resizeObserver.observe(this.element);
 
         // Move container left a bit to hide elements appearing on the left
@@ -325,8 +325,9 @@ function calculateDelta(timestamp: number, lastTimestamp: number | undefined): n
     return timestamp - (lastTimestamp ?? timestamp);
 }
 
-function doubleContainerSize(container: Container): void {
+async function doubleContainerSize(container: Container): Promise<void> {
     const numChildren = container.children.length;
+    const clonedImages: HTMLImageElement[] = [];
 
     for (let i = 0; i < numChildren; i++) {
         const child = container.children[i];
@@ -335,8 +336,17 @@ function doubleContainerSize(container: Container): void {
             throw new Error(`A child element within the container was undefined at index ${i}.`);
         }
 
-        container.appendChild(child.cloneNode(true));
+        const clone = child.cloneNode(true) as Element;
+        container.appendChild(clone);
+        clonedImages.push(...Array.from(clone.querySelectorAll("img")));
     }
+
+    // If we don't wait for cloned images to finish loading bad things can happen
+    await Promise.all(
+        clonedImages.map((image) =>
+            image.complete ? Promise.resolve() : image.decode().catch(() => undefined),
+        ),
+    );
 }
 
 function wrapInDiv(elementToWrap: Element): HTMLDivElement {
